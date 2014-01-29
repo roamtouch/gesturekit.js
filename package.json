@@ -1,0 +1,31 @@
+{
+  "name": "GestureKit",
+  "version": "0.0.1",
+  "description": "Cross-platform gesture recognition library for smart devices and gesture control.",
+  "author": "<guille87paz@gmail.com>",
+  "contributors": [
+    {
+      "name": "Guille Paz",
+      "email": "guille87paz@gmail.com"
+    }
+  ],
+  "scripts": {
+    "start": "grunt dev",
+    "test": "grunt test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/RoamTouch/GestureKit.git"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "grunt": "~0.4.1",
+    "grunt-jslint": "0.2.6",
+    "grunt-contrib-concat": "0.3.0",
+    "grunt-contrib-uglify": "0.2.2",
+    "browserify": "~3.24.2",
+    "grunt-browserify": "~1.3.0"
+  },
+  "license": "Apache v2 license",
+  "engine": "node >= 0.8.6"
+}
