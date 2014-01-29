@@ -3,6 +3,7 @@
 > Cross-platform gesture recognition library for smart devices and gesture control.
 
 ## API
+[TODO]
 
 ### Table of contents
 [TODO]
@@ -11,11 +12,9 @@
 [TODO]
 
 ## Grunt tasks
-
 [TODO]
 
 ## Contribute
-
 [TODO]
 
 ## Maintained by
