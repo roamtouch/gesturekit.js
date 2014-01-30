@@ -4,8 +4,6 @@
  * @author Guille Paz <guille87paz@gmail.com>
  */
 
-// browserify -s gesturekit src/index.js > ./dist/gesturekit.js
-
 // Module dependencies
 var Gesturekit = require('./Gesturekit'),
     gesturekit;
