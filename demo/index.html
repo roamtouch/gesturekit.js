@@ -19,47 +19,41 @@
     </head>
     <body>
         <div id="viewport"></div>
-        <section class="simon-viewport">
+        <!--section class="simon-viewport">
             <div class="simon-type-green"></div>
             <div class="simon-type-red"></div>
             <div class="simon-type-yellow"></div>
             <div class="simon-type-blue"></div>
             <div class="simon-feedback"></div>
-        </section>
+        </section-->
         <script src="js/app.js"></script>
         <script src="../dist/gesturekit.js"></script>
+        <script src="../visor/visor.js"></script>
         <script>
             window.onload = function () {
-                var viewport = document.querySelector('#viewport'),
-                    game = new Simon(viewport);
+                var viewport = document.querySelector('body');
+                new Visor();
 
                 gesturekit
-                    .on('init', function () {
-                        game.start();
+                    .on('loadgestures', function () {
                     })
                     .on('GK_RED', function () {
-                        game.motion('red');
                         viewport.style.backgroundColor = 'red';
                     })
                     .on('GK_BLUE', function () {
-                        game.motion('blue');
                         viewport.style.backgroundColor = 'blue';
                     })
                     .on('GK_GREEN', function () {
-                        game.motion('green');
                         viewport.style.backgroundColor = 'green';
                     })
                     .on('GK_YELLOW', function () {
-                        game.motion('yellow');
                         viewport.style.backgroundColor = 'yellow';
                     })
                     .on('GK_CROSS', function (eve) {
-                        game.motion('violet');
                         viewport.style.backgroundColor = 'violet';
                     })
                     .on('GK_PAUSE', function (eve) {
-                        game.motion('violet');
-                        viewport.style.backgroundColor = 'pink';
+                        viewport.style.backgroundColor = 'orange';
                     })
                     .on('gesturemotion', function (eve) {
                         // console.log(eve);

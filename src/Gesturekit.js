@@ -21,7 +21,7 @@ var inherit = require('./helpers').inherit,
         'sensor': docEl,
         'enabled': false,
         'visor': false,
-        'threshold': 280 //ms
+        'threshold': 0 //ms
     },
     motion = false,
     eve;
@@ -94,7 +94,7 @@ GestureKit.prototype._setTouchEvents = function() {
     this.update = function () {
         clearTimeout(that._wait);
         that.recognizer.setPoints(eve.touches);
-        that.emit('gesturemotion', eve.touches);
+        that.emit('gesturemotion', eve);
 
         // Change move status
         motion = false;

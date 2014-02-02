@@ -103,6 +103,7 @@ Recognizer.prototype.addGestures = function (data) {
         meta = data[i].metadata;
 
         if (meta !== '' && meta !== null && this.metadata[name] === undefined ) {
+            // Es parametro para el gesto cuando se emite el evento.
             this.metadata[name] = meta;
         }
 
@@ -114,6 +115,8 @@ Recognizer.prototype.addGestures = function (data) {
         }
 
         this.pdollar.addGesture(name, pointArray);
+
+        // this.pdollar.PointClouds.push(new PointCloud(name, pointArray));
     }
 
     return this;

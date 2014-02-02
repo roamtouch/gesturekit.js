@@ -1,3 +1,5 @@
+// ANDA!
+
 'use strict';
 
 /**
@@ -26,6 +28,15 @@ function PointCloud(name, points) {
     }
 }
 
+//
+// Result class
+//
+function Result(name, score) {
+
+    this.name = name;
+    this.score = score;
+}
+
 /**
  * PDollarRecognizer class constants
  * @private
@@ -41,9 +52,11 @@ var NumPoints = 32,
  * @constructor
  */
 function PDollarRecognizer() {
+
     this.pointClouds = [];
 
     this.recognize = function (points) {
+
         points = Resample(points, NumPoints);
         points = Scale(points);
         points = TranslateTo(points, Origin);
@@ -53,7 +66,7 @@ function PDollarRecognizer() {
             d,
             result = {
                 'name': NO_MATCH_NAME,
-                'score': NO_MATCH_SCORE,
+                'score': NO_MATCH_SCORE
             },
             d1,
             d2,
@@ -96,7 +109,10 @@ function PDollarRecognizer() {
 
             if (best < RECOGNITION_THRESHOLD) {
                 result.score = Math.max((best - 2.0) / -2.0, 0.0)
+            } else {
+                result.name = NO_MATCH_NAME;
             }
+
         }
 
         return result;
@@ -105,6 +121,7 @@ function PDollarRecognizer() {
     this.addGesture = function (name, points) {
         this.pointClouds.push(new PointCloud(name, points));
     }
+
 }
 
 /**
@@ -137,11 +154,14 @@ function CloudDistance(pts1, pts2, start) {
     var k = 0,
         pts1Len = pts1.length, // pts1.length == pts2.length
         matched = [],
+
         sum = 0,
         i = start,
-        index = -1,
-        min = +Infinity,
-        j = 0,
+
+        index,
+        min,
+        j,
+
         matechedLen,
         weight;
 
@@ -152,6 +172,10 @@ function CloudDistance(pts1, pts2, start) {
     matechedLen = matched.length;
 
     do {
+
+        index = -1;
+        min = +Infinity;
+        j = 0;
 
         for (j; j < matechedLen; j += 1) {
             if (!matched[j]) {
@@ -165,9 +189,11 @@ function CloudDistance(pts1, pts2, start) {
 
         matched[index] = true;
 
-        weight = 1 - ((i - start + pts1.length) % pts1.length) / pts1.length;
+        weight = 1 - ((i - start + pts1Len) % pts1Len) / pts1Len;
+
         sum += weight * min;
-        i = (i + 1) % pts1.length;
+
+        i = (i + 1) % pts1Len;
 
     } while (i != start);
 
@@ -253,7 +279,6 @@ function Centroid(points) {
     return new Point(x, y, 0);
 }
 
-
 /**
  * Length traversed by a point path
  * @private
@@ -270,7 +295,6 @@ function PathLength(points) {
     }
     return d;
 }
-
 /**
  * Euclidean distance between two points
  * @private
