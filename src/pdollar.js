@@ -1,6 +1,6 @@
-// ANDA!
-
 'use strict';
+
+var M = window.Math;
 
 /**
  * Point class
@@ -108,7 +108,7 @@ function PDollarRecognizer() {
             }
 
             if (best < RECOGNITION_THRESHOLD) {
-                result.score = Math.max((best - 2.0) / -2.0, 0.0)
+                result.score = M.max((best - 2.0) / -2.0, 0.0)
             } else {
                 result.name = NO_MATCH_NAME;
             }
@@ -130,7 +130,7 @@ function PDollarRecognizer() {
  */
 function GreedyCloudMatch(points, P) {
     var e = 0.50,
-        step = Math.floor(Math.pow(points.length, 1 - e)),
+        step = M.floor(M.pow(points.length, 1 - e)),
         min = +Infinity,
         i = 0,
         len = points.length,
@@ -140,7 +140,7 @@ function GreedyCloudMatch(points, P) {
     for (i; i < len; i += step) {
         d1 = CloudDistance(points, P.points, i);
         d2 = CloudDistance(P.points, points, i);
-        min = Math.min(min, Math.min(d1, d2)); // min3
+        min = M.min(min, M.min(d1, d2)); // min3
     }
 
     return min;
@@ -157,11 +157,9 @@ function CloudDistance(pts1, pts2, start) {
 
         sum = 0,
         i = start,
-
         index,
         min,
         j,
-
         matechedLen,
         weight;
 
@@ -177,7 +175,7 @@ function CloudDistance(pts1, pts2, start) {
         min = +Infinity;
         j = 0;
 
-        for (j; j < matechedLen; j += 1) {
+        for (j; j < pts1Len; j += 1) {
             if (!matched[j]) {
                 var d = Distance(pts1[i], pts2[j]);
                 if (d < min) {
@@ -238,12 +236,12 @@ function Resample(points, n) {
 function Scale(points) {
     var minX = +Infinity, maxX = -Infinity, minY = +Infinity, maxY = -Infinity;
     for (var i = 0; i < points.length; i++) {
-        minX = Math.min(minX, points[i].X);
-        minY = Math.min(minY, points[i].Y);
-        maxX = Math.max(maxX, points[i].X);
-        maxY = Math.max(maxY, points[i].Y);
+        minX = M.min(minX, points[i].X);
+        minY = M.min(minY, points[i].Y);
+        maxX = M.max(maxX, points[i].X);
+        maxY = M.max(maxY, points[i].Y);
     }
-    var size = Math.max(maxX - minX, maxY - minY);
+    var size = M.max(maxX - minX, maxY - minY);
     var newpoints = new Array();
     for (var i = 0; i < points.length; i++) {
         var qx = (points[i].X - minX) / size;
@@ -307,7 +305,7 @@ function Distance(p1, p2) {
     var dx = p2.X - p1.X,
         dy = p2.Y - p1.Y;
 
-    return Math.sqrt(dx * dx + dy * dy);
+    return M.sqrt(dx * dx + dy * dy);
 }
 
 /**
