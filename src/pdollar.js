@@ -1,6 +1,15 @@
 'use strict';
 
-var M = window.Math;
+/**
+ * PDollarRecognizer class constants
+ * @private
+ */
+var M = window.Math,
+    NumPoints = 32,
+    Origin = new Point(0,0,0),
+    RECOGNITION_THRESHOLD = 1.5,
+    NO_MATCH_NAME = 'No match.',
+    NO_MATCH_SCORE = 0.0;
 
 /**
  * Point class
@@ -27,25 +36,6 @@ function PointCloud(name, points) {
         this.points.push(new Point(points[i].X, points[i].Y, points[i].ID));
     }
 }
-
-//
-// Result class
-//
-function Result(name, score) {
-
-    this.name = name;
-    this.score = score;
-}
-
-/**
- * PDollarRecognizer class constants
- * @private
- */
-var NumPoints = 32,
-    Origin = new Point(0,0,0),
-    RECOGNITION_THRESHOLD = 1.5,
-    NO_MATCH_NAME = 'No match.',
-    NO_MATCH_SCORE = 0.0;
 
 /**
  * PDollarRecognizer class
@@ -154,7 +144,6 @@ function CloudDistance(pts1, pts2, start) {
     var k = 0,
         pts1Len = pts1.length, // pts1.length == pts2.length
         matched = [],
-
         sum = 0,
         i = start,
         index,
@@ -205,27 +194,35 @@ function CloudDistance(pts1, pts2, start) {
 function Resample(points, n) {
     var I = PathLength(points) / (n - 1), // interval length
         D = 0.0,
-        newpoints = [points[0]];
+        newpoints = [points[0]],
+        i = 1,
+        d,
+        qx,
+        qy,
+        q;
 
-    for (var i = 1; i < points.length; i++)
-    {
-        if (points[i].ID == points[i-1].ID)
-        {
-            var d = Distance(points[i - 1], points[i]);
-            if ((D + d) >= I)
-            {
-                var qx = points[i - 1].X + ((I - D) / d) * (points[i].X - points[i - 1].X);
-                var qy = points[i - 1].Y + ((I - D) / d) * (points[i].Y - points[i - 1].Y);
-                var q = new Point(qx, qy, points[i].ID);
-                newpoints[newpoints.length] = q; // append new point 'q'
+    for (i; i < points.length; i += 1) {
+        if (points[i].ID === points[i-1].ID) {
+            d = Distance(points[i - 1], points[i]);
+
+            if ((D + d) >= I) {
+                qx = points[i - 1].X + ((I - D) / d) * (points[i].X - points[i - 1].X);
+                qy = points[i - 1].Y + ((I - D) / d) * (points[i].Y - points[i - 1].Y);
+                q = new Point(qx, qy, points[i].ID);
+                newpoints.push(q); // append new point 'q'
                 points.splice(i, 0, q); // insert 'q' at position i in points s.t. 'q' will be the next i
                 D = 0.0;
+
+            } else {
+                D += d;
             }
-            else D += d;
         }
     }
-    if (newpoints.length == n - 1) // sometimes we fall a rounding-error short of adding the last point, so add it if so
-        newpoints[newpoints.length] = new Point(points[points.length - 1].X, points[points.length - 1].Y, points[points.length - 1].ID);
+
+    if (newpoints.length === n - 1) { // sometimes we fall a rounding-error short of adding the last point, so add it if so
+        newpoints.push(new Point(points[points.length - 1].X, points[points.length - 1].Y, points[points.length - 1].ID));
+    }
+
     return newpoints;
 }
 
@@ -234,20 +231,35 @@ function Resample(points, n) {
  * @private
  */
 function Scale(points) {
-    var minX = +Infinity, maxX = -Infinity, minY = +Infinity, maxY = -Infinity;
-    for (var i = 0; i < points.length; i++) {
+
+    var i = 0,
+        j = 0,
+        len = points.length,
+        minX = +Infinity,
+        maxX = -Infinity,
+        minY = +Infinity,
+        maxY = -Infinity,
+        size,
+        newpoints = [],
+        qx,
+        qy;
+
+
+    for (i; i < len; i += 1) {
         minX = M.min(minX, points[i].X);
         minY = M.min(minY, points[i].Y);
         maxX = M.max(maxX, points[i].X);
         maxY = M.max(maxY, points[i].Y);
     }
-    var size = M.max(maxX - minX, maxY - minY);
-    var newpoints = new Array();
-    for (var i = 0; i < points.length; i++) {
-        var qx = (points[i].X - minX) / size;
-        var qy = (points[i].Y - minY) / size;
-        newpoints[newpoints.length] = new Point(qx, qy, points[i].ID);
+
+    size = M.max(maxX - minX, maxY - minY);
+
+    for (j; j < len; j += 1) {
+        qx = (points[j].X - minX) / size;
+        qy = (points[j].Y - minY) / size;
+        newpoints.push(new Point(qx, qy, points[j].ID));
     }
+
     return newpoints;
 }
 
@@ -256,24 +268,38 @@ function Scale(points) {
  * @private
  */
 function TranslateTo(points, pt) {
-    var c = Centroid(points);
-    var newpoints = new Array();
-    for (var i = 0; i < points.length; i++) {
-        var qx = points[i].X + pt.X - c.X;
-        var qy = points[i].Y + pt.Y - c.Y;
-        newpoints[newpoints.length] = new Point(qx, qy, points[i].ID);
+
+    var c = Centroid(points),
+        newpoints = [],
+        i = 0,
+        len = points.length,
+        qx,
+        qy;
+
+    for (i; i < len; i += 1) {
+        qx = points[i].X + pt.X - c.X;
+        qy = points[i].Y + pt.Y - c.Y;
+
+        newpoints.push(new Point(qx, qy, points[i].ID));
     }
+
     return newpoints;
 }
 
 function Centroid(points) {
-    var x = 0.0, y = 0.0;
-    for (var i = 0; i < points.length; i++) {
+    var x = 0.0,
+        y = 0.0,
+        i = 0,
+        len = points.length;
+
+    for (i; i < len; i += 1) {
         x += points[i].X;
         y += points[i].Y;
     }
-    x /= points.length;
-    y /= points.length;
+
+    x /= len;
+    y /= len;
+
     return new Point(x, y, 0);
 }
 
@@ -285,12 +311,16 @@ function Centroid(points) {
  * @returns {Number}
  */
 function PathLength(points) {
-    var d = 0.0;
-    for (var i = 1; i < points.length; i++)
-    {
-        if (points[i].ID == points[i-1].ID)
+    var d = 0.0,
+        i = 1,
+        len = points.length;
+
+    for (i; i < len; i += 1) {
+        if (points[i].ID == points[i - 1].ID) {
             d += Distance(points[i - 1], points[i]);
+        }
     }
+
     return d;
 }
 /**
