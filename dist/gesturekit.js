@@ -183,8 +183,7 @@ var inherit = _dereq_('./helpers').inherit,
     docEl = window.document.documentElement,
     defaults = {
         'sensor': docEl,
-        'enabled': false,
-        'visor': false,
+        'enabled': true,
         'threshold': 0 //ms
     },
     motion = false,
@@ -265,6 +264,9 @@ GestureKit.prototype._setTouchEvents = function() {
     };
 
     this.captureMotion = function (e) {
+
+        that.emit('touchmove', e);
+
         // No changing, exit
         if (!motion && that._enabled) {
             e.preventDefault();
@@ -275,6 +277,8 @@ GestureKit.prototype._setTouchEvents = function() {
     };
 
     this.sensor.addEventListener('touchstart', function (eve) {
+        that.emit('touchstart', eve);
+
         if (!that._enabled) { return; }
 
         that.recognizer.setPoints(eve.touches);
@@ -284,6 +288,8 @@ GestureKit.prototype._setTouchEvents = function() {
     this.sensor.addEventListener('touchmove', that.captureMotion, false);
 
     this.sensor.addEventListener('touchend', function (eve) {
+        that.emit('touchend', eve);
+
         if (!motion && !that._enabled) { return; }
 
         motion = false;
@@ -298,7 +304,7 @@ GestureKit.prototype._setTouchEvents = function() {
 
 /**
  * Enables an instance of GestureKit.
- * @memberof! ch.GestureKit.prototype
+ * @memberof! GestureKit.prototype
  * @function
  * @returns {gesturekit}
  * @example
@@ -310,7 +316,7 @@ GestureKit.prototype.enable = function () {
 
     /**
      * Emits when a GestureKit is enabled.
-     * @event ch.GestureKit#enable
+     * @event GestureKit#enable
      * @example
      * // Subscribe to "enable" event.
      * gesturekit.on('enable', function () {
@@ -324,7 +330,7 @@ GestureKit.prototype.enable = function () {
 
 /**
  * Disables an instance of GestureKit.
- * @memberof! ch.GestureKit.prototype
+ * @memberof! GestureKit.prototype
  * @function
  * @returns {gesturekit}
  * @example
@@ -336,7 +342,7 @@ GestureKit.prototype.disable = function () {
 
     /**
      * Emits when GestureKit is disable.
-     * @event ch.GestureKit#disable
+     * @event GestureKit#disable
      * @example
      * // Subscribe to "disable" event.
      * gesturekit.on('disable', function () {
@@ -612,9 +618,18 @@ gesturekit.version = '0.0.1';
 // Expose gesturekit
 module.exports = gesturekit;
 },{"./Gesturekit":2}],6:[function(_dereq_,module,exports){
-// ANDA!
-
 'use strict';
+
+/**
+ * PDollarRecognizer class constants
+ * @private
+ */
+var M = window.Math,
+    NumPoints = 32,
+    Origin = new Point(0,0,0),
+    RECOGNITION_THRESHOLD = 1.5,
+    NO_MATCH_NAME = 'No match.',
+    NO_MATCH_SCORE = 0.0;
 
 /**
  * Point class
@@ -641,25 +656,6 @@ function PointCloud(name, points) {
         this.points.push(new Point(points[i].X, points[i].Y, points[i].ID));
     }
 }
-
-//
-// Result class
-//
-function Result(name, score) {
-
-    this.name = name;
-    this.score = score;
-}
-
-/**
- * PDollarRecognizer class constants
- * @private
- */
-var NumPoints = 32,
-    Origin = new Point(0,0,0),
-    RECOGNITION_THRESHOLD = 1.5,
-    NO_MATCH_NAME = 'No match.',
-    NO_MATCH_SCORE = 0.0;
 
 /**
  * PDollarRecognizer class
@@ -722,7 +718,7 @@ function PDollarRecognizer() {
             }
 
             if (best < RECOGNITION_THRESHOLD) {
-                result.score = Math.max((best - 2.0) / -2.0, 0.0)
+                result.score = M.max((best - 2.0) / -2.0, 0.0)
             } else {
                 result.name = NO_MATCH_NAME;
             }
@@ -744,7 +740,7 @@ function PDollarRecognizer() {
  */
 function GreedyCloudMatch(points, P) {
     var e = 0.50,
-        step = Math.floor(Math.pow(points.length, 1 - e)),
+        step = M.floor(M.pow(points.length, 1 - e)),
         min = +Infinity,
         i = 0,
         len = points.length,
@@ -754,7 +750,7 @@ function GreedyCloudMatch(points, P) {
     for (i; i < len; i += step) {
         d1 = CloudDistance(points, P.points, i);
         d2 = CloudDistance(P.points, points, i);
-        min = Math.min(min, Math.min(d1, d2)); // min3
+        min = M.min(min, M.min(d1, d2)); // min3
     }
 
     return min;
@@ -768,14 +764,11 @@ function CloudDistance(pts1, pts2, start) {
     var k = 0,
         pts1Len = pts1.length, // pts1.length == pts2.length
         matched = [],
-
         sum = 0,
         i = start,
-
         index,
         min,
         j,
-
         matechedLen,
         weight;
 
@@ -791,7 +784,7 @@ function CloudDistance(pts1, pts2, start) {
         min = +Infinity;
         j = 0;
 
-        for (j; j < matechedLen; j += 1) {
+        for (j; j < pts1Len; j += 1) {
             if (!matched[j]) {
                 var d = Distance(pts1[i], pts2[j]);
                 if (d < min) {
@@ -821,27 +814,35 @@ function CloudDistance(pts1, pts2, start) {
 function Resample(points, n) {
     var I = PathLength(points) / (n - 1), // interval length
         D = 0.0,
-        newpoints = [points[0]];
+        newpoints = [points[0]],
+        i = 1,
+        d,
+        qx,
+        qy,
+        q;
 
-    for (var i = 1; i < points.length; i++)
-    {
-        if (points[i].ID == points[i-1].ID)
-        {
-            var d = Distance(points[i - 1], points[i]);
-            if ((D + d) >= I)
-            {
-                var qx = points[i - 1].X + ((I - D) / d) * (points[i].X - points[i - 1].X);
-                var qy = points[i - 1].Y + ((I - D) / d) * (points[i].Y - points[i - 1].Y);
-                var q = new Point(qx, qy, points[i].ID);
-                newpoints[newpoints.length] = q; // append new point 'q'
+    for (i; i < points.length; i += 1) {
+        if (points[i].ID === points[i-1].ID) {
+            d = Distance(points[i - 1], points[i]);
+
+            if ((D + d) >= I) {
+                qx = points[i - 1].X + ((I - D) / d) * (points[i].X - points[i - 1].X);
+                qy = points[i - 1].Y + ((I - D) / d) * (points[i].Y - points[i - 1].Y);
+                q = new Point(qx, qy, points[i].ID);
+                newpoints.push(q); // append new point 'q'
                 points.splice(i, 0, q); // insert 'q' at position i in points s.t. 'q' will be the next i
                 D = 0.0;
+
+            } else {
+                D += d;
             }
-            else D += d;
         }
     }
-    if (newpoints.length == n - 1) // sometimes we fall a rounding-error short of adding the last point, so add it if so
-        newpoints[newpoints.length] = new Point(points[points.length - 1].X, points[points.length - 1].Y, points[points.length - 1].ID);
+
+    if (newpoints.length === n - 1) { // sometimes we fall a rounding-error short of adding the last point, so add it if so
+        newpoints.push(new Point(points[points.length - 1].X, points[points.length - 1].Y, points[points.length - 1].ID));
+    }
+
     return newpoints;
 }
 
@@ -850,20 +851,35 @@ function Resample(points, n) {
  * @private
  */
 function Scale(points) {
-    var minX = +Infinity, maxX = -Infinity, minY = +Infinity, maxY = -Infinity;
-    for (var i = 0; i < points.length; i++) {
-        minX = Math.min(minX, points[i].X);
-        minY = Math.min(minY, points[i].Y);
-        maxX = Math.max(maxX, points[i].X);
-        maxY = Math.max(maxY, points[i].Y);
+
+    var i = 0,
+        j = 0,
+        len = points.length,
+        minX = +Infinity,
+        maxX = -Infinity,
+        minY = +Infinity,
+        maxY = -Infinity,
+        size,
+        newpoints = [],
+        qx,
+        qy;
+
+
+    for (i; i < len; i += 1) {
+        minX = M.min(minX, points[i].X);
+        minY = M.min(minY, points[i].Y);
+        maxX = M.max(maxX, points[i].X);
+        maxY = M.max(maxY, points[i].Y);
     }
-    var size = Math.max(maxX - minX, maxY - minY);
-    var newpoints = new Array();
-    for (var i = 0; i < points.length; i++) {
-        var qx = (points[i].X - minX) / size;
-        var qy = (points[i].Y - minY) / size;
-        newpoints[newpoints.length] = new Point(qx, qy, points[i].ID);
+
+    size = M.max(maxX - minX, maxY - minY);
+
+    for (j; j < len; j += 1) {
+        qx = (points[j].X - minX) / size;
+        qy = (points[j].Y - minY) / size;
+        newpoints.push(new Point(qx, qy, points[j].ID));
     }
+
     return newpoints;
 }
 
@@ -872,24 +888,38 @@ function Scale(points) {
  * @private
  */
 function TranslateTo(points, pt) {
-    var c = Centroid(points);
-    var newpoints = new Array();
-    for (var i = 0; i < points.length; i++) {
-        var qx = points[i].X + pt.X - c.X;
-        var qy = points[i].Y + pt.Y - c.Y;
-        newpoints[newpoints.length] = new Point(qx, qy, points[i].ID);
+
+    var c = Centroid(points),
+        newpoints = [],
+        i = 0,
+        len = points.length,
+        qx,
+        qy;
+
+    for (i; i < len; i += 1) {
+        qx = points[i].X + pt.X - c.X;
+        qy = points[i].Y + pt.Y - c.Y;
+
+        newpoints.push(new Point(qx, qy, points[i].ID));
     }
+
     return newpoints;
 }
 
 function Centroid(points) {
-    var x = 0.0, y = 0.0;
-    for (var i = 0; i < points.length; i++) {
+    var x = 0.0,
+        y = 0.0,
+        i = 0,
+        len = points.length;
+
+    for (i; i < len; i += 1) {
         x += points[i].X;
         y += points[i].Y;
     }
-    x /= points.length;
-    y /= points.length;
+
+    x /= len;
+    y /= len;
+
     return new Point(x, y, 0);
 }
 
@@ -901,12 +931,16 @@ function Centroid(points) {
  * @returns {Number}
  */
 function PathLength(points) {
-    var d = 0.0;
-    for (var i = 1; i < points.length; i++)
-    {
-        if (points[i].ID == points[i-1].ID)
+    var d = 0.0,
+        i = 1,
+        len = points.length;
+
+    for (i; i < len; i += 1) {
+        if (points[i].ID == points[i - 1].ID) {
             d += Distance(points[i - 1], points[i]);
+        }
     }
+
     return d;
 }
 /**
@@ -921,7 +955,7 @@ function Distance(p1, p2) {
     var dx = p2.X - p1.X,
         dy = p2.Y - p1.Y;
 
-    return Math.sqrt(dx * dx + dy * dy);
+    return M.sqrt(dx * dx + dy * dy);
 }
 
 /**

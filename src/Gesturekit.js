@@ -19,8 +19,7 @@ var inherit = require('./helpers').inherit,
     docEl = window.document.documentElement,
     defaults = {
         'sensor': docEl,
-        'enabled': false,
-        'visor': false,
+        'enabled': true,
         'threshold': 0 //ms
     },
     motion = false,
@@ -101,6 +100,9 @@ GestureKit.prototype._setTouchEvents = function() {
     };
 
     this.captureMotion = function (e) {
+
+        that.emit('touchmove', e);
+
         // No changing, exit
         if (!motion && that._enabled) {
             e.preventDefault();
@@ -111,6 +113,8 @@ GestureKit.prototype._setTouchEvents = function() {
     };
 
     this.sensor.addEventListener('touchstart', function (eve) {
+        that.emit('touchstart', eve);
+
         if (!that._enabled) { return; }
 
         that.recognizer.setPoints(eve.touches);
@@ -120,6 +124,8 @@ GestureKit.prototype._setTouchEvents = function() {
     this.sensor.addEventListener('touchmove', that.captureMotion, false);
 
     this.sensor.addEventListener('touchend', function (eve) {
+        that.emit('touchend', eve);
+
         if (!motion && !that._enabled) { return; }
 
         motion = false;
@@ -134,7 +140,7 @@ GestureKit.prototype._setTouchEvents = function() {
 
 /**
  * Enables an instance of GestureKit.
- * @memberof! ch.GestureKit.prototype
+ * @memberof! GestureKit.prototype
  * @function
  * @returns {gesturekit}
  * @example
@@ -146,7 +152,7 @@ GestureKit.prototype.enable = function () {
 
     /**
      * Emits when a GestureKit is enabled.
-     * @event ch.GestureKit#enable
+     * @event GestureKit#enable
      * @example
      * // Subscribe to "enable" event.
      * gesturekit.on('enable', function () {
@@ -160,7 +166,7 @@ GestureKit.prototype.enable = function () {
 
 /**
  * Disables an instance of GestureKit.
- * @memberof! ch.GestureKit.prototype
+ * @memberof! GestureKit.prototype
  * @function
  * @returns {gesturekit}
  * @example
@@ -172,7 +178,7 @@ GestureKit.prototype.disable = function () {
 
     /**
      * Emits when GestureKit is disable.
-     * @event ch.GestureKit#disable
+     * @event GestureKit#disable
      * @example
      * // Subscribe to "disable" event.
      * gesturekit.on('disable', function () {
