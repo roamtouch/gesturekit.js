@@ -74,18 +74,15 @@ Emitter.prototype.off = function (event, listener) {
         return this;
     }
 
-    var listeners = this._eventsCollection[event],
-        i = 0,
-        len;
+    var listeners = this._eventsCollection[event];
 
     if (listeners !== undefined) {
-        len = listeners.length;
-        for (i; i < len; i += 1) {
-            if (listeners[i] === listener) {
+        listeners.forEach(function (e, i) {
+            if (e === listener) {
                 listeners.splice(i, 1);
-                break;
+                return;
             }
-        }
+        });
     }
 
     return this;
@@ -120,9 +117,8 @@ Emitter.prototype.emit = function () {
 
     var args = Array.prototype.slice.call(arguments, 0), // converted to array
         event = args.shift(), // Store and remove events from args
-        listeners,
-        i = 0,
-        len;
+        that = this,
+        listeners
 
     if (typeof event === 'string') {
         event = {'type': event};
@@ -134,17 +130,14 @@ Emitter.prototype.emit = function () {
 
     if (this._eventsCollection !== undefined && this._eventsCollection[event.type] !== undefined) {
         listeners = this._eventsCollection[event.type];
-        len = listeners.length;
 
-        for (i; i < len; i += 1) {
-            listeners[i].apply(this, args);
+        listeners.forEach(function (e, i) {
+            e.apply(that, args);
 
-            if (listeners[i].once) {
-                this.off(event.type, listeners[i]);
-                len -= 1;
-                i -= 1;
+            if (e.once) {
+                that.off(event.type, e);
             }
-        }
+        });
     }
 
     return this;
