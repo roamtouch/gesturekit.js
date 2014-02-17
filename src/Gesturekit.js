@@ -16,11 +16,10 @@ var inherit = require('./helpers').inherit,
                 window.setTimeout(callback, 1000 / 60);
             };
     }()),
-    docEl = window.document.documentElement,
     defaults = {
-        'sensor': docEl,
+        'sensor': window.document.documentElement,
         'enabled': true,
-        'threshold': 0 //ms
+        'threshold': 0 // ms
     },
     motion = false,
     eve;
@@ -36,7 +35,7 @@ function customizeOptions(options) {
 }
 
 /**
- *
+ * Creates a new instance of GestureKit.
  * @constructor
  * @augments Emitter
  * @returns {gesturekit} Returns a new instance of GestureKit.
@@ -53,33 +52,38 @@ inherit(GestureKit, Emitter);
  * @memberof! GestureKit.prototype
  * @function
  * @param {(Object | String)} [options] A given options to customize an instance or a string indicating a GestureKit UID.
- * @param {String} [options.uid] A given options to customize an instance or an string indicating GestureKit UID.
+ * @param {String} [options.uid] A given string indicating a GestureKit UID.
  * @param {HTMLElement} [options.sensor] An HTMLElement to use as recognizer sensor. Default: document.documentElement.
  * @param {Boolean} [options.enabled] Enable or disable the gesture recognition. Default: false.
- * @param {Boolean} [options.visor] Enable or disable Visor. Default: false.
- * @param {Boolean} [options.leapmotion] Configures Leapmotion support. Default: false. ?
+ * @param {Number} [options.threshold] A given number of milliseconds to set a threshold to recognize a gesture. Default: 0.
  * @returns {gesturekit} Returns a new instance of GestureKit.
  */
 GestureKit.prototype.init = function init(options) {
-    var that = this;
 
     if (this.recognizer === undefined) {
 
-        this.options = customizeOptions(options || {});
+        this._options = customizeOptions(options || {});
 
-        this._threshold = this.options.threshold;
+        this._threshold = this._options.threshold;
 
-        this.sensor = this.options.sensor;
+        this.sensor = this._options.sensor;
 
         // User interaction
         this._setTouchEvents();
 
-        this._enabled = this.options.enabled;
+        this._enabled = this._options.enabled;
     }
 
     return this;
 };
 
+/**
+ * Sets touch events.
+ * @memberof! GestureKit.prototype
+ * @function
+ * @private
+ * @returns {gesturekit}
+ */
 GestureKit.prototype._setTouchEvents = function() {
     var that = this,
         wait;
@@ -88,9 +92,9 @@ GestureKit.prototype._setTouchEvents = function() {
      * A Recognizer instance.
      * @type {Object}
      */
-    this.recognizer = new Recognizer(this.options.uid);
+    this.recognizer = new Recognizer(this._options.uid);
 
-    this.update = function () {
+    this._update = function () {
         clearTimeout(that._wait);
         that.recognizer.setPoints(eve.touches);
         that.emit('gesturemotion', eve);
@@ -99,7 +103,7 @@ GestureKit.prototype._setTouchEvents = function() {
         motion = false;
     };
 
-    this.captureMotion = function (e) {
+    this._captureMotion = function (e) {
 
         that.emit('touchmove', e);
 
@@ -108,7 +112,7 @@ GestureKit.prototype._setTouchEvents = function() {
             e.preventDefault();
             eve = e;
             motion = true;
-            requestAnimFrame(that.update);
+            requestAnimFrame(that._update);
         }
     };
 
@@ -121,7 +125,7 @@ GestureKit.prototype._setTouchEvents = function() {
         that.emit('gesturestart', eve);
     }, false);
 
-    this.sensor.addEventListener('touchmove', that.captureMotion, false);
+    this.sensor.addEventListener('touchmove', that._captureMotion, false);
 
     this.sensor.addEventListener('touchend', function (eve) {
         that.emit('touchend', eve);
@@ -129,10 +133,11 @@ GestureKit.prototype._setTouchEvents = function() {
         if (!motion && !that._enabled) { return; }
 
         motion = false;
-        that.wait = setTimeout(function () {
+        that._wait = setTimeout(function () {
             that.recognizer.recognizeGesture();
             that.emit('gestureend', eve);
         }, that._threshold);
+
     }, false);
 
     return this;
