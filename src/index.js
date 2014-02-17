@@ -17,7 +17,7 @@ gesturekit = new Gesturekit();
 /**
  * gesturekit version.
  */
-gesturekit.version = '0.0.1';
+gesturekit.version = '1.1.0';
 
 // Expose gesturekit
 module.exports = gesturekit;
