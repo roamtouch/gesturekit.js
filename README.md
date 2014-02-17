@@ -1,20 +1,46 @@
-# [GestureKit](http://gesturekit.com)
+# [GestureKit v1.1.0](http://gesturekit.com)
 
-> Cross-platform gesture recognition library for smart devices and gesture control.
+> A JavaScript library to recognize advanced gestures on web browsers.
+
+Advantages:
+
+- It's small and standalone.
+- Dependency-free.
+- Just 3 kb (min & gzip).
+- Multi-device support.
+- Easy-implementation.
+- Made it with love.
 
 ## API
 
 ### Table of contents
-- [gesturekit.init()](#)
-- [gesturekit.enable()](#)
-- [gesturekit.disable()](#)
-- [gesturekit.version](#)
-- [gesturekit.sensor](#)
-- [gesturekit.on()](#)
-- [gesturekit.once()](#)
-- [gesturekit.off()](#)
-- [gesturekit.getListeners()](#)
-- [gesturekit.emit()](#)
+- Properties
+    - [.version](#)
+    - [.sensor](#)
+
+- Methods
+    - [.init()](#)
+    - [.enable()](#)
+    - [.disable()](#)
+    - [.on()](#)
+    - [.once()](#)
+    - [.off()](#)
+    - [.getListeners()](#)
+    - [.emit()](#)
+
+- Events
+    - [load](#)
+    - [fail](#)
+    - [enable](#)
+    - [disable](#)
+    - [recognize](#)
+    - [notrecognize](#)
+    - [pointerstart](#)
+    - [pointermove](#)
+    - [pointerend](#)
+    - [gesturestart](#)
+    - [gesturemotion](#)
+    - [gestureend](#)
 
 #### gesturekit#init(options | uid)
 Initialize an instance of GestureKit.
