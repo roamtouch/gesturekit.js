@@ -1,5 +1,5 @@
 /*!
- * GestureKit v0.0.1
+ * GestureKit v1.1.0
  * http://gesturekit.com/
  *
  * Copyright (c) 2014, RoamTouch
@@ -83,18 +83,15 @@ Emitter.prototype.off = function (event, listener) {
         return this;
     }
 
-    var listeners = this._eventsCollection[event],
-        i = 0,
-        len;
+    var listeners = this._eventsCollection[event];
 
     if (listeners !== undefined) {
-        len = listeners.length;
-        for (i; i < len; i += 1) {
-            if (listeners[i] === listener) {
+        listeners.forEach(function (e, i) {
+            if (e === listener) {
                 listeners.splice(i, 1);
-                break;
+                return;
             }
-        }
+        });
     }
 
     return this;
@@ -129,9 +126,8 @@ Emitter.prototype.emit = function () {
 
     var args = Array.prototype.slice.call(arguments, 0), // converted to array
         event = args.shift(), // Store and remove events from args
-        listeners,
-        i = 0,
-        len;
+        that = this,
+        listeners
 
     if (typeof event === 'string') {
         event = {'type': event};
@@ -143,17 +139,14 @@ Emitter.prototype.emit = function () {
 
     if (this._eventsCollection !== undefined && this._eventsCollection[event.type] !== undefined) {
         listeners = this._eventsCollection[event.type];
-        len = listeners.length;
 
-        for (i; i < len; i += 1) {
-            listeners[i].apply(this, args);
+        listeners.forEach(function (e, i) {
+            e.apply(that, args);
 
-            if (listeners[i].once) {
-                this.off(event.type, listeners[i]);
-                len -= 1;
-                i -= 1;
+            if (e.once) {
+                that.off(event.type, e);
             }
-        }
+        });
     }
 
     return this;
@@ -180,11 +173,10 @@ var inherit = _dereq_('./helpers').inherit,
                 window.setTimeout(callback, 1000 / 60);
             };
     }()),
-    docEl = window.document.documentElement,
     defaults = {
-        'sensor': docEl,
+        'sensor': window.document.documentElement,
         'enabled': true,
-        'threshold': 0 //ms
+        'threshold': 0 // ms
     },
     motion = false,
     eve;
@@ -200,7 +192,7 @@ function customizeOptions(options) {
 }
 
 /**
- *
+ * Creates a new instance of GestureKit.
  * @constructor
  * @augments Emitter
  * @returns {gesturekit} Returns a new instance of GestureKit.
@@ -217,33 +209,38 @@ inherit(GestureKit, Emitter);
  * @memberof! GestureKit.prototype
  * @function
  * @param {(Object | String)} [options] A given options to customize an instance or a string indicating a GestureKit UID.
- * @param {String} [options.uid] A given options to customize an instance or an string indicating GestureKit UID.
+ * @param {String} [options.uid] A given string indicating a GestureKit UID.
  * @param {HTMLElement} [options.sensor] An HTMLElement to use as recognizer sensor. Default: document.documentElement.
  * @param {Boolean} [options.enabled] Enable or disable the gesture recognition. Default: false.
- * @param {Boolean} [options.visor] Enable or disable Visor. Default: false.
- * @param {Boolean} [options.leapmotion] Configures Leapmotion support. Default: false. ?
+ * @param {Number} [options.threshold] A given number of milliseconds to set a threshold to recognize a gesture. Default: 0.
  * @returns {gesturekit} Returns a new instance of GestureKit.
  */
 GestureKit.prototype.init = function init(options) {
-    var that = this;
 
     if (this.recognizer === undefined) {
 
-        this.options = customizeOptions(options || {});
+        this._options = customizeOptions(options || {});
 
-        this._threshold = this.options.threshold;
+        this._threshold = this._options.threshold;
 
-        this.sensor = this.options.sensor;
+        this.sensor = this._options.sensor;
 
         // User interaction
         this._setTouchEvents();
 
-        this._enabled = this.options.enabled;
+        this._enabled = this._options.enabled;
     }
 
     return this;
 };
 
+/**
+ * Sets touch events.
+ * @memberof! GestureKit.prototype
+ * @function
+ * @private
+ * @returns {gesturekit}
+ */
 GestureKit.prototype._setTouchEvents = function() {
     var that = this,
         wait;
@@ -252,9 +249,9 @@ GestureKit.prototype._setTouchEvents = function() {
      * A Recognizer instance.
      * @type {Object}
      */
-    this.recognizer = new Recognizer(this.options.uid);
+    this.recognizer = new Recognizer(this._options.uid);
 
-    this.update = function () {
+    this._update = function () {
         clearTimeout(that._wait);
         that.recognizer.setPoints(eve.touches);
         that.emit('gesturemotion', eve);
@@ -263,7 +260,7 @@ GestureKit.prototype._setTouchEvents = function() {
         motion = false;
     };
 
-    this.captureMotion = function (e) {
+    this._captureMotion = function (e) {
 
         that.emit('touchmove', e);
 
@@ -272,7 +269,7 @@ GestureKit.prototype._setTouchEvents = function() {
             e.preventDefault();
             eve = e;
             motion = true;
-            requestAnimFrame(that.update);
+            requestAnimFrame(that._update);
         }
     };
 
@@ -285,7 +282,7 @@ GestureKit.prototype._setTouchEvents = function() {
         that.emit('gesturestart', eve);
     }, false);
 
-    this.sensor.addEventListener('touchmove', that.captureMotion, false);
+    this.sensor.addEventListener('touchmove', that._captureMotion, false);
 
     this.sensor.addEventListener('touchend', function (eve) {
         that.emit('touchend', eve);
@@ -293,10 +290,11 @@ GestureKit.prototype._setTouchEvents = function() {
         if (!motion && !that._enabled) { return; }
 
         motion = false;
-        that.wait = setTimeout(function () {
+        that._wait = setTimeout(function () {
             that.recognizer.recognizeGesture();
             that.emit('gestureend', eve);
         }, that._threshold);
+
     }, false);
 
     return this;
@@ -449,34 +447,28 @@ Recognizer.prototype.loadGestures = function () {
  */
 Recognizer.prototype.addGestures = function (data) {
 
-    var i = 0,
-        j,
+    var that = this,
         name,
         meta,
-        gesture,
-        pointArray,
-        len = data.length;
+        pointArray;
 
-    for (i; i < len; i += 1) {
-        name = data[i].method;
-        meta = data[i].metadata;
+    data.forEach(function (e, i) {
+        name = e.method;
+        meta = e.metadata;
 
-        if (meta !== '' && meta !== null && this.metadata[name] === undefined ) {
+        if (meta !== '' && meta !== null && that.metadata[name] === undefined ) {
             // Es parametro para el gesto cuando se emite el evento.
-            this.metadata[name] = meta;
+            that.metadata[name] = meta;
         }
 
         pointArray = [];
-        gesture = data[i].gesture;
 
-        for (j = 0; j < gesture.length; j += 1) {
-            pointArray.push(new Point(parseFloat(gesture[j].X), parseFloat(gesture[j].Y), gesture[j].ID));
-        }
+        e.gesture.forEach(function (p) {
+            pointArray.push(new Point(parseFloat(p.X), parseFloat(p.Y), p.ID));
+        });
 
-        this.pdollar.addGesture(name, pointArray);
-
-        // this.pdollar.PointClouds.push(new PointCloud(name, pointArray));
-    }
+        that.pdollar.addGesture(name, pointArray);
+    });
 
     return this;
 };
@@ -489,24 +481,12 @@ Recognizer.prototype.addGestures = function (data) {
  */
 Recognizer.prototype.setPoints = function (touches) {
 
-    var i = 0,
-        pointers = touches.length,
-        ts,
-        x,
-        y;
+    var that = this,
+        pointers = touches.length;
 
-    if (pointers > 0) {
-
-        for (i; i < pointers; i += 1) {
-
-            ts = touches[i];
-            x = ts.pageX;
-            y = ts.pageY;
-
-            this.pointsCollection.push(new Point(x, y, pointers));
-        }
-
-    }
+    [].forEach.call(touches, function (e) {
+        that.pointsCollection.push(new Point(e.pageX, e.pageY, pointers));
+    });
 
     return this;
 };
@@ -613,7 +593,7 @@ gesturekit = new Gesturekit();
 /**
  * gesturekit version.
  */
-gesturekit.version = '0.0.1';
+gesturekit.version = '1.1.0';
 
 // Expose gesturekit
 module.exports = gesturekit;
@@ -646,15 +626,14 @@ function Point(x, y, id) {
  * @constructor
  */
 function PointCloud(name, points) {
-    var i = 0,
-        len = points.length;
+    var that = this;
 
     this.name = name;
     this.points = [];
 
-    for (i; i < len; i += 1) {
-        this.points.push(new Point(points[i].X, points[i].Y, points[i].ID));
-    }
+    points.forEach(function (point) {
+        that.points.push(new Point(point.X, point.Y, point.ID));
+    });
 }
 
 /**
@@ -671,8 +650,7 @@ function PDollarRecognizer() {
         points = Scale(points);
         points = TranslateTo(points, Origin);
 
-        var i = 0,
-            len = this.pointClouds.length,
+        var that = this,
             d,
             result = {
                 'name': NO_MATCH_NAME,
@@ -686,10 +664,8 @@ function PDollarRecognizer() {
             b2 = +Infinity,
             u2 = -1;
 
-        // for each point-cloud template
-        for (i; i < len; i += 1) {
-            d = GreedyCloudMatch(points, this.pointClouds[i]);
-
+        this.pointClouds.forEach(function (pointCloud, i) {
+            d = GreedyCloudMatch(points, pointCloud);
             if (d < b1) {
                 b2 = b1;
                 u2 = u1;
@@ -700,7 +676,7 @@ function PDollarRecognizer() {
                 b2 = d;
                 u2 = i;
             }
-        }
+        });
 
         if (u1 !== -1) {
 
@@ -761,8 +737,7 @@ function GreedyCloudMatch(points, P) {
  * @private
  */
 function CloudDistance(pts1, pts2, start) {
-    var k = 0,
-        pts1Len = pts1.length, // pts1.length == pts2.length
+    var pts1Len = pts1.length, // pts1.length == pts2.length
         matched = [],
         sum = 0,
         i = start,
@@ -772,9 +747,9 @@ function CloudDistance(pts1, pts2, start) {
         matechedLen,
         weight;
 
-    for (k; k < pts1Len; k += 1) {
+    pts1.forEach(function () {
         matched.push(false);
-    }
+    });
 
     matechedLen = matched.length;
 
