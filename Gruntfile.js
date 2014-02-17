@@ -75,6 +75,13 @@ module.exports = function (grunt) {
                 'failOnError': false, // defaults to true
                 'shebang': true, // ignore shebang lines
             }
+        },
+
+        'jasmine': {
+            'src': ['dist/gesturekit.js'],
+            'options': {
+                'specs': ['tests/spec.js']
+            }
         }
     });
 
@@ -83,10 +90,12 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-jslint');
+    grunt.loadNpmTasks('grunt-contrib-jasmine');
 
     // Resgister task(s).
     grunt.registerTask('default', []);
     grunt.registerTask('dev', ['browserify']);
     grunt.registerTask('lint', ['dev', 'concat', 'jslint']);
     grunt.registerTask('dist', ['dev', 'concat', 'uglify']);
+    grunt.registerTask('test', ['jasmine']);
 };
