@@ -1,7 +1,7 @@
 {
   "name": "GestureKit",
   "version": "1.1.0",
-  "description": "Cross-platform gesture recognition library for smart devices and gesture control.",
+  "description": "A JavaScript library to recognize advanced gestures on web browsers.",
   "author": "<guille87paz@gmail.com>",
   "contributors": [
     {
