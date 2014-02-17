@@ -69,7 +69,7 @@ GestureKit.prototype.init = function init(options) {
         this.sensor = this._options.sensor;
 
         // User interaction
-        this._setTouchEvents();
+        this._setPointerEvents();
 
         this._enabled = this._options.enabled;
     }
@@ -84,7 +84,7 @@ GestureKit.prototype.init = function init(options) {
  * @private
  * @returns {gesturekit}
  */
-GestureKit.prototype._setTouchEvents = function() {
+GestureKit.prototype._setPointerEvents = function() {
     var that = this,
         wait;
 
@@ -105,7 +105,7 @@ GestureKit.prototype._setTouchEvents = function() {
 
     this._captureMotion = function (e) {
 
-        that.emit('touchmove', e);
+        that.emit('pointermove', e);
 
         // No changing, exit
         if (!motion && that._enabled) {
@@ -117,7 +117,7 @@ GestureKit.prototype._setTouchEvents = function() {
     };
 
     this.sensor.addEventListener('touchstart', function (eve) {
-        that.emit('touchstart', eve);
+        that.emit('pointerstart', eve);
 
         if (!that._enabled) { return; }
 
@@ -128,7 +128,7 @@ GestureKit.prototype._setTouchEvents = function() {
     this.sensor.addEventListener('touchmove', that._captureMotion, false);
 
     this.sensor.addEventListener('touchend', function (eve) {
-        that.emit('touchend', eve);
+        that.emit('pointerend', eve);
 
         if (!motion && !that._enabled) { return; }
 

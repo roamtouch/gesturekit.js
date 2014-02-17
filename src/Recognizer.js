@@ -69,10 +69,9 @@ Recognizer.prototype.loadGestures = function () {
             if ((status >= 200 && status < 300) || status === 304 || status === 0) {
                 response = JSON.parse(xhr.response || xhr.responseText);
                 that.addGestures(response.gestureset.gestures);
-                gesturekit.emit('loadgestures', response);
-
+                gesturekit.emit('load', response);
             } else {
-                gesturekit.emit('failgestures');
+                gesturekit.emit('fail');
             }
          }
     };
