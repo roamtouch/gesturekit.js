@@ -26,15 +26,14 @@ function Point(x, y, id) {
  * @constructor
  */
 function PointCloud(name, points) {
-    var i = 0,
-        len = points.length;
+    var that = this;
 
     this.name = name;
     this.points = [];
 
-    for (i; i < len; i += 1) {
-        this.points.push(new Point(points[i].X, points[i].Y, points[i].ID));
-    }
+    points.forEach(function (point) {
+        that.points.push(new Point(point.X, point.Y, point.ID));
+    });
 }
 
 /**
@@ -51,8 +50,7 @@ function PDollarRecognizer() {
         points = Scale(points);
         points = TranslateTo(points, Origin);
 
-        var i = 0,
-            len = this.pointClouds.length,
+        var that = this,
             d,
             result = {
                 'name': NO_MATCH_NAME,
@@ -66,10 +64,8 @@ function PDollarRecognizer() {
             b2 = +Infinity,
             u2 = -1;
 
-        // for each point-cloud template
-        for (i; i < len; i += 1) {
-            d = GreedyCloudMatch(points, this.pointClouds[i]);
-
+        this.pointClouds.forEach(function (pointCloud, i) {
+            d = GreedyCloudMatch(points, pointCloud);
             if (d < b1) {
                 b2 = b1;
                 u2 = u1;
@@ -80,7 +76,7 @@ function PDollarRecognizer() {
                 b2 = d;
                 u2 = i;
             }
-        }
+        });
 
         if (u1 !== -1) {
 
@@ -141,8 +137,7 @@ function GreedyCloudMatch(points, P) {
  * @private
  */
 function CloudDistance(pts1, pts2, start) {
-    var k = 0,
-        pts1Len = pts1.length, // pts1.length == pts2.length
+    var pts1Len = pts1.length, // pts1.length == pts2.length
         matched = [],
         sum = 0,
         i = start,
@@ -152,9 +147,9 @@ function CloudDistance(pts1, pts2, start) {
         matechedLen,
         weight;
 
-    for (k; k < pts1Len; k += 1) {
+    pts1.forEach(function () {
         matched.push(false);
-    }
+    });
 
     matechedLen = matched.length;
 

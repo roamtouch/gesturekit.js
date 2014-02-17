@@ -90,34 +90,28 @@ Recognizer.prototype.loadGestures = function () {
  */
 Recognizer.prototype.addGestures = function (data) {
 
-    var i = 0,
-        j,
+    var that = this,
         name,
         meta,
-        gesture,
-        pointArray,
-        len = data.length;
+        pointArray;
 
-    for (i; i < len; i += 1) {
-        name = data[i].method;
-        meta = data[i].metadata;
+    data.forEach(function (e, i) {
+        name = e.method;
+        meta = e.metadata;
 
-        if (meta !== '' && meta !== null && this.metadata[name] === undefined ) {
+        if (meta !== '' && meta !== null && that.metadata[name] === undefined ) {
             // Es parametro para el gesto cuando se emite el evento.
-            this.metadata[name] = meta;
+            that.metadata[name] = meta;
         }
 
         pointArray = [];
-        gesture = data[i].gesture;
 
-        for (j = 0; j < gesture.length; j += 1) {
-            pointArray.push(new Point(parseFloat(gesture[j].X), parseFloat(gesture[j].Y), gesture[j].ID));
-        }
+        e.gesture.forEach(function (p) {
+            pointArray.push(new Point(parseFloat(p.X), parseFloat(p.Y), p.ID));
+        });
 
-        this.pdollar.addGesture(name, pointArray);
-
-        // this.pdollar.PointClouds.push(new PointCloud(name, pointArray));
-    }
+        that.pdollar.addGesture(name, pointArray);
+    });
 
     return this;
 };
@@ -130,24 +124,12 @@ Recognizer.prototype.addGestures = function (data) {
  */
 Recognizer.prototype.setPoints = function (touches) {
 
-    var i = 0,
-        pointers = touches.length,
-        ts,
-        x,
-        y;
+    var that = this,
+        pointers = touches.length;
 
-    if (pointers > 0) {
-
-        for (i; i < pointers; i += 1) {
-
-            ts = touches[i];
-            x = ts.pageX;
-            y = ts.pageY;
-
-            this.pointsCollection.push(new Point(x, y, pointers));
-        }
-
-    }
+    [].forEach.call(touches, function (e) {
+        that.pointsCollection.push(new Point(e.pageX, e.pageY, pointers));
+    });
 
     return this;
 };
