@@ -5,6 +5,7 @@
         <title>GestureKit Demo</title>
         <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
         <meta name="apple-mobile-web-app-capable" content="yes">
+        <link href="../help/help.css" rel="stylesheet">
         <style>
             body {
                 position: absolute;
@@ -12,18 +13,23 @@
                 bottom: 0;
                 left: 0;
                 right: 0;
+
                 margin: 0;
             }
         </style>
     </head>
     <body>
         <script src="../dist/gesturekit.js"></script>
-        <script src="../visor/visor.js"></script>
+        <script src="../visor/dist/gesturekit.visor.js"></script>
+        <script src="../help/help.js"></script>
         <script>
-            window.onload = function () {
-                var viewport = document.querySelector('body');
 
-                var v = new Visor();
+            window.onload = function () {
+                var viewport = document.querySelector('body'),
+                    visor = new Visor(),
+                    help = new Help({
+                        'uid': '5a48d9b0-fc11-47ac-bf80-36636c8428cb'
+                    });
 
                 gesturekit
                     .on('GK_RED', function () {
@@ -43,8 +49,10 @@
                     })
                     .on('GK_PAUSE', function (eve) {
                         viewport.style.backgroundColor = 'orange';
+                    })
+                    .on('GK_HELP', function () {
+                        help.show();
                     });
-
                 gesturekit.init({
                     'uid': '5a48d9b0-fc11-47ac-bf80-36636c8428cb'
                 });
