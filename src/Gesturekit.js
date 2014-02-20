@@ -84,9 +84,8 @@ GestureKit.prototype.init = function init(options) {
  * @private
  * @returns {gesturekit}
  */
-GestureKit.prototype._setPointerEvents = function() {
-    var that = this,
-        wait;
+GestureKit.prototype._setPointerEvents = function () {
+    var that = this;
 
     /**
      * A Recognizer instance.

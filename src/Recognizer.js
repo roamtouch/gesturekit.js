@@ -31,8 +31,7 @@ function Recognizer(uid) {
  * @param {(Object | String)} options Configuration options or an string indicating UID.
  * @returns {recognizer} Returns a new instance of Recognizer.
  */
-Recognizer.prototype.init = function() {
-    var that = this;
+Recognizer.prototype.init = function () {
 
     // Creates points collection
     this.pointsCollection = [];
@@ -57,6 +56,7 @@ Recognizer.prototype.init = function() {
 Recognizer.prototype.loadGestures = function () {
     var that = this,
         xhr = new XMLHttpRequest(),
+        status,
         response;
 
     xhr.open('GET', url + this.uid);
@@ -73,7 +73,7 @@ Recognizer.prototype.loadGestures = function () {
             } else {
                 gesturekit.emit('fail');
             }
-         }
+        }
     };
 
     xhr.send();
@@ -98,7 +98,7 @@ Recognizer.prototype.addGestures = function (data) {
         name = e.method;
         meta = e.metadata;
 
-        if (meta !== '' && meta !== null && that.metadata[name] === undefined ) {
+        if (meta !== '' && meta !== null && that.metadata[name] === undefined) {
             // Es parametro para el gesto cuando se emite el evento.
             that.metadata[name] = meta;
         }
@@ -156,7 +156,7 @@ Recognizer.prototype.recognizeGesture = function () {
 
     this.pointsCollection.length = 0;
 
-    console.log("gesture: " + result.name + " score: " + result.score);
+    // console.log("gesture: " + result.name + " score: " + result.score);
 
     return this;
 };

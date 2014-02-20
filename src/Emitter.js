@@ -118,7 +118,7 @@ Emitter.prototype.emit = function () {
     var args = Array.prototype.slice.call(arguments, 0), // converted to array
         event = args.shift(), // Store and remove events from args
         that = this,
-        listeners
+        listeners;
 
     if (typeof event === 'string') {
         event = {'type': event};
