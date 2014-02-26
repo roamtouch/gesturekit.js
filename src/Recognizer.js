@@ -147,6 +147,8 @@ Recognizer.prototype.recognizeGesture = function () {
 
     var result = this.pdollar.recognize(this.pointsCollection);
 
+    result.metadata = this.metadata[result.name];
+
     if (parseFloat(result.score) >= 0.1) {
         gesturekit.emit(result.name, result);
         gesturekit.emit('recognize', result);
