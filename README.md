@@ -158,4 +158,4 @@ gesturekit.emit('live', 'data1', 'data2');
 ## License
 Licensed under Apache v2 License.
 
-Copyright (c) 2013 [RoamTouch](http://github.com/RoamTouch).
+Copyright (c) 2014 [RoamTouch](http://github.com/RoamTouch).
