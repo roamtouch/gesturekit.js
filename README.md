@@ -14,36 +14,34 @@ Advantages:
 ## API
 
 ### Table of contents
-- Properties
-    - [.version](#)
-    - [.sensor](#)
 
 - Methods
-    - [.init()](#)
-    - [.enable()](#)
-    - [.disable()](#)
-    - [.on()](#)
-    - [.once()](#)
-    - [.off()](#)
-    - [.getListeners()](#)
-    - [.emit()](#)
+    - [.init()](#gesturekitinitoptions--uid)
+    - [.enable()](#gesturekitenable)
+    - [.disable()](#gesturekitdisable)
+    - [.on()](#gesturekitonevent-listener-once)
+    - [.once()](#gesturekitonceevent-listener)
+    - [.off()](#gesturekitoffevent-listener)
+    - [.getListeners()](#gesturekitgetlistenersevent)
+    - [.emit()](##gesturekitemitevent-arg1-arg2-)
 
 - Events
-    - [load](#)
-    - [fail](#)
-    - [enable](#)
-    - [disable](#)
-    - [recognize](#)
-    - [notrecognize](#)
-    - [pointerstart](#)
-    - [pointermove](#)
-    - [pointerend](#)
-    - [gesturestart](#)
-    - [gesturemotion](#)
-    - [gestureend](#)
+    - [load](#load)
+    - [fail](#fail)
+    - [enable](#enable)
+    - [disable](#disable)
+    - [recognize](#recognize)
+    - [notrecognize](#noterecognize)
+    - [pointerstart](#pointerstart)
+    - [pointermove](#pointermove)
+    - [pointerend](#pointerend)
+    - [gesturestart](#gesturestart)
+    - [gesturemotion](#gesturemotion)
+    - [gestureend](#gestureend)
 
+### Methods
 #### gesturekit#init(options | uid)
-Initialize an instance of GestureKit.
+Initialize an instance of GestureKit. You could customize a GestureKit instance using the following options, and shown is their default value.
 - `options`: A given options to customize an instance or a string indicating a GestureKit UID.
     - `uid`: A given string indicating a GestureKit UID.
     - `sensor`: An HTMLElement to use as recognizer sensor. Default: `document.documentElement`.
@@ -118,6 +116,117 @@ All emitters emit the event `newListener` when new listeners are added.
 
 ```js
 gesturekit.emit('live', 'data1', 'data2');
+```
+
+### Events
+GestureKit works as follows: By triggering and subscribing to the below events you can have total control of the touch and gesture interaction with the DOM. These are the available events:
+
+#### load
+Event emitted when all gestures are loaded.
+
+```js
+gesturekit.on('load', function (event) {
+    // Some code here!
+});
+```
+
+#### fail
+Event emitted when the gestures load are failed.
+
+```js
+gesturekit.on('fail', function (event) {
+    // Some code here!
+});
+```
+
+#### enable
+Event emitted when gesturekit is enable.
+
+```js
+gesturekit.on('enable', function (event) {
+    // Some code here!
+});
+```
+
+#### disable
+Event emitted when gesturekit is disable.
+
+```js
+gesturekit.on('disable', function (event) {
+    // Some code here!
+});
+```
+
+#### recognize
+Event emitted when a gesture is recognized.
+
+```js
+gesturekit.on('recognize', function (event) {
+    // Some code here!
+});
+```
+
+#### notrecognize
+Event emitted when a gesture is not recognized.
+
+```js
+gesturekit.on('notrecognize', function (event) {
+    // Some code here!
+});
+```
+
+#### pointerstart
+Event emitted when the user touch the sensor.
+
+```js
+gesturekit.on('pointerstart', function (event) {
+    // Some code here!
+});
+```
+
+#### pointermove
+Event emitted when the user move your fingers over the sensor.
+
+```js
+gesturekit.on('pointermove', function (event) {
+    // Some code here!
+});
+```
+
+#### pointerend
+Event emitted when the user stop to touch the sensor.
+
+```js
+gesturekit.on('pointerend', function (event) {
+    // Some code here!
+});
+```
+
+#### gesturestart
+Event emitted when the recognition of a gesture is started.
+
+```js
+gesturekit.on('gesturestart', function (event) {
+    // Some code here!
+});
+```
+
+#### gesturemotion
+Event emitted while the gesture motion is taken place.
+
+```js
+gesturekit.on('gesturemotion', function (event) {
+    // Some code here!
+});
+```
+
+#### gestureend
+Event emitted when the recognition of a gesture is finished.
+
+```js
+gesturekit.on('gestureend', function (event) {
+    // Some code here!
+});
 ```
 
 ## Development setup
