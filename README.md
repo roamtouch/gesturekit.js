@@ -11,11 +11,43 @@ Advantages:
 - Easy-implementation.
 - Made it with love.
 
+## Compatibility
+- iOS
+ - iPhone/iPod iOS 6
+ - iPad/iPhone iOS 7
+- Android
+ - Default browser
+ - Chrome
+ - Firefox
+
+##Usage
+### Add gesturekit.js into your HTML file.
+You should {download} the library or use our link and reference the JavaScript file using a `<script>` tag somewhere on your HTML pages.
+```html
+<script src="http://libs.gesturekit.com/gesturekit.min.js"></script>
+```
+
+### Define your gesture listeners.
+Once added the library you can create your listeners with the same name you have defined the gesture with `GK_` prefix.
+```js
+gesturekit.on('GK_NAME', function (event) {
+    // Some code here!
+});
+```
+
+### Initialize gesturekit.
+Initializes the gesturekit library using the .init() method passing your `UID` as parameter.
+```js
+gesturekit.init({
+    'uid': 'xxxx-xxxx-xxxx'
+});
+```
+
 ## API
 
 ### Table of contents
 
-- Methods
+- [Methods](#methods)
     - [.init()](#gesturekitinitoptions--uid)
     - [.enable()](#gesturekitenable)
     - [.disable()](#gesturekitdisable)
@@ -25,7 +57,7 @@ Advantages:
     - [.getListeners()](#gesturekitgetlistenersevent)
     - [.emit()](##gesturekitemitevent-arg1-arg2-)
 
-- Events
+- [Events](#events)
     - [load](#load)
     - [fail](#fail)
     - [enable](#enable)
