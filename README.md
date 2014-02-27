@@ -22,9 +22,9 @@ Advantages:
 
 ##Usage
 ### Add gesturekit.js into your HTML file.
-You should {download} the library or use our link and reference the JavaScript file using a `<script>` tag somewhere on your HTML pages.
+You should download the library and reference the JavaScript file using a `<script>` tag somewhere on your HTML pages.
 ```html
-<script src="http://libs.gesturekit.com/gesturekit.min.js"></script>
+<script src="gesturekit.min.js"></script>
 ```
 
 ### Define your gesture listeners.
