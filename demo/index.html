@@ -50,6 +50,9 @@
                     .on('GK_PAUSE', function (eve) {
                         viewport.style.backgroundColor = 'orange';
                     })
+                    .on('GK_FOO', function (eve) {
+                        viewport.style.backgroundColor = 'black';
+                    })
                     .on('GK_HELP', function () {
                         help.show();
                     });
