@@ -17,7 +17,7 @@ function Point(x, y, id) {
 var M = window.Math,
     NumPoints = 32,
     Origin = new Point(0, 0, 0),
-    RECOGNITION_THRESHOLD = 1.5,
+    RECOGNITION_THRESHOLD = 1.8,
     NO_MATCH_NAME = 'No match.',
     NO_MATCH_SCORE = 0.0;
 
