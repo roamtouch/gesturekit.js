@@ -35,16 +35,15 @@ function Emitter() {
  */
 Emitter.prototype.on = function (event, listener, once) {
 
-    this._collection = this._collection || {};
+    this._eventsCollection = this._eventsCollection || {};
 
     listener.once = once || false;
 
-    // getListeners
-    if (this._collection[event] === undefined) {
-        this._collection[event] = [];
+    if (this._eventsCollection[event] === undefined) {
+        this._eventsCollection[event] = [];
     }
 
-    this._collection[event].push(listener);
+    this._eventsCollection[event].push(listener);
 
     return this;
 };
@@ -80,11 +79,11 @@ Emitter.prototype.once = function (event, listener) {
  */
 Emitter.prototype.off = function (event, listener) {
 
-    if (this._collection === undefined) {
+    if (this._eventsCollection === undefined) {
         return this;
     }
 
-    var listeners = this._collection[event];
+    var listeners = this._eventsCollection[event];
 
     if (listeners !== undefined) {
         listeners.forEach(function (e, i) {
@@ -96,6 +95,21 @@ Emitter.prototype.off = function (event, listener) {
     }
 
     return this;
+};
+
+/**
+ * Returns all listeners from the collection for a specified event.
+ * @memberof! Emitter.prototype
+ * @function
+ * @param {String} event The event name.
+ * @returns {Array}
+ * @example
+ * // Returns listeners from 'ready' event.
+ * emitter.getListeners('ready');
+ */
+Emitter.prototype.getListeners = function (event) {
+
+    return this._eventsCollection[event];
 };
 
 /**
@@ -123,8 +137,8 @@ Emitter.prototype.emit = function () {
         event.target = this;
     }
 
-    if (this._collection !== undefined && this._collection[event.type] !== undefined) {
-        listeners = this._collection[event.type];
+    if (this._eventsCollection !== undefined && this._eventsCollection[event.type] !== undefined) {
+        listeners = this._eventsCollection[event.type];
 
         listeners.forEach(function (e, i) {
             e.apply(that, args);
