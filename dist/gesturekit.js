@@ -164,6 +164,7 @@ module.exports = Emitter;
 // Module dependencies
 var inherit = _dereq_('./helpers').inherit,
     Emitter = _dereq_('./Emitter'),
+    touch = _dereq_('./touchEvents'),
     Recognizer = _dereq_('./Recognizer'),
     requestAnimFrame = (function () {
         return window.requestAnimationFrame ||
@@ -272,7 +273,7 @@ GestureKit.prototype._setPointerEvents = function () {
         }
     };
 
-    this.sensor.addEventListener('touchstart', function (eve) {
+    this.sensor.addEventListener(touch.start, function (eve) {
         that.emit('pointerstart', eve);
 
         if (!that._enabled) { return; }
@@ -281,9 +282,9 @@ GestureKit.prototype._setPointerEvents = function () {
         that.emit('gesturestart', eve);
     }, false);
 
-    this.sensor.addEventListener('touchmove', that._captureMotion, false);
+    this.sensor.addEventListener(touch.move, that._captureMotion, false);
 
-    this.sensor.addEventListener('touchend', function (eve) {
+    this.sensor.addEventListener(touch.end, function (eve) {
         that.emit('pointerend', eve);
 
         if (!motion && !that._enabled) { return; }
@@ -353,7 +354,7 @@ GestureKit.prototype.disable = function () {
 
 // Expose GestureKit
 module.exports = GestureKit;
-},{"./Emitter":1,"./Recognizer":3,"./helpers":4}],3:[function(_dereq_,module,exports){
+},{"./Emitter":1,"./Recognizer":3,"./helpers":4,"./touchEvents":7}],3:[function(_dereq_,module,exports){
 'use strict';
 
 /**
@@ -964,6 +965,22 @@ module.exports.Pdollar = PDollarRecognizer;
 
 // Expose Point
 module.exports.Point = Point;
+},{}],7:[function(_dereq_,module,exports){
+'use strict';
+
+/**
+ * @author Guille Paz <guille87paz@gmail.com>
+ */
+
+var msPointerSupported = window.navigator.msPointerEnabled,
+    touchEvents = {
+        'start': msPointerSupported ? 'MSPointerDown' : 'touchstart',
+        'move': msPointerSupported ? 'MSPointerMove' : 'touchmove',
+        'end': msPointerSupported ? 'MSPointerUp' : 'touchend'
+    };
+
+// Expose GestureKit
+module.exports = touchEvents;
 },{}]},{},[5])
 (5)
 });
