@@ -7,6 +7,7 @@
 // Module dependencies
 var inherit = require('./helpers').inherit,
     Emitter = require('./Emitter'),
+    touch = require('./touchEvents'),
     Recognizer = require('./Recognizer'),
     requestAnimFrame = (function () {
         return window.requestAnimationFrame ||
@@ -115,7 +116,7 @@ GestureKit.prototype._setPointerEvents = function () {
         }
     };
 
-    this.sensor.addEventListener('touchstart', function (eve) {
+    this.sensor.addEventListener(touch.start, function (eve) {
         that.emit('pointerstart', eve);
 
         if (!that._enabled) { return; }
@@ -124,9 +125,9 @@ GestureKit.prototype._setPointerEvents = function () {
         that.emit('gesturestart', eve);
     }, false);
 
-    this.sensor.addEventListener('touchmove', that._captureMotion, false);
+    this.sensor.addEventListener(touch.move, that._captureMotion, false);
 
-    this.sensor.addEventListener('touchend', function (eve) {
+    this.sensor.addEventListener(touch.end, function (eve) {
         that.emit('pointerend', eve);
 
         if (!motion && !that._enabled) { return; }
