@@ -8,7 +8,7 @@ module.exports = function (grunt) {
         'banner': {
             'full': [
                 '/*!',
-                ' * GestureKit v<%= pkg.version %>',
+                ' * gesturekit.js v<%= pkg.version %>',
                 ' * http://gesturekit.com/',
                 ' *',
                 ' * Copyright (c) <%= grunt.template.today("yyyy") %>, RoamTouch',
@@ -16,7 +16,7 @@ module.exports = function (grunt) {
                 ' * http://gesturekit.com/',
                 ' */\n'
             ].join('\n'),
-            'min': '/*! GestureKit v<%= pkg.version %> http://gesturekit.com/ | Released under the Apache v2 License. */'
+            'min': '/*! gesturekit.js v<%= pkg.version %> http://gesturekit.com/ | Released under the Apache v2 License. */'
         },
 
         'browserify': {

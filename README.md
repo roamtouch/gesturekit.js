@@ -1,4 +1,4 @@
-# [GestureKit v1.1.0](http://gesturekit.com) [![Build Status](https://secure.travis-ci.org/RoamTouch/GestureKit.png)](http://travis-ci.org/RoamTouch/GestureKit) [![devDependency Status](https://david-dm.org/RoamTouch/GestureKit/dev-status.png)](https://david-dm.org/RoamTouch/GestureKit#info=devDependencies)
+# [gesturekit.js v1.1.0](http://gesturekit.com) [![Build Status](https://secure.travis-ci.org/RoamTouch/gesturekit.js.png)](http://travis-ci.org/RoamTouch/gesturekit.js) [![devDependency Status](https://david-dm.org/RoamTouch/gesturekit.js/dev-status.png)](https://david-dm.org/RoamTouch/gesturekit.js#info=devDependencies)
 
 > A JavaScript library to recognize gestures on web browsers.
 
