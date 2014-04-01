@@ -209,8 +209,8 @@ inherit(GestureKit, Emitter);
  * Initialize a new instance of GestureKit with a given options.
  * @memberof! GestureKit.prototype
  * @function
- * @param {(Object | String)} [options] A given options to customize an instance or a string indicating a GestureKit UIID.
- * @param {String} [options.uiid] A given string indicating a GestureKit UIID.
+ * @param {(Object | String)} [options] A given options to customize an instance or a string indicating a GestureKit GID.
+ * @param {String} [options.gid] A given string indicating a GestureKit GID.
  * @param {HTMLElement} [options.sensor] An HTMLElement to use as recognizer sensor. Default: document.documentElement.
  * @param {Boolean} [options.enabled] Enable or disable the gesture recognition. Default: false.
  * @param {Number} [options.threshold] A given number of milliseconds to set a threshold to recognize a gesture. Default: 0.
@@ -249,7 +249,7 @@ GestureKit.prototype._setPointerEvents = function () {
      * A Recognizer instance.
      * @type {Object}
      */
-    this.recognizer = new Recognizer(this._options.uiid);
+    this.recognizer = new Recognizer(this._options.gid);
 
     this._update = function () {
         clearTimeout(that._wait);
@@ -369,12 +369,12 @@ var Pdollar = _dereq_('./pdollar').Pdollar,
 /**
  * Creates a new instance of Recognizer.
  * @constructor
- * @param {(Object | String)} [options] A given options to customize an instance or an string indicating UIID.
- * @param {String} [uiid] XXXXXX
+ * @param {(Object | String)} [options] A given options to customize an instance or an string indicating GID.
+ * @param {String} [gid] XXXXXX
  * @returns {recognizer} Returns a new instance of Recognizer.
  */
-function Recognizer(uiid) {
-    this.uiid = uiid;
+function Recognizer(gid) {
+    this.gid = gid;
 
     this.init();
 
@@ -385,7 +385,7 @@ function Recognizer(uiid) {
  * Initialize a new instance of Recognizer with given options.
  * @memberof! Recognizer.prototype
  * @function
- * @param {(Object | String)} options Configuration options or an string indicating UIID.
+ * @param {(Object | String)} options Configuration options or an string indicating GID.
  * @returns {recognizer} Returns a new instance of Recognizer.
  */
 Recognizer.prototype.init = function () {
@@ -416,7 +416,7 @@ Recognizer.prototype.loadGestures = function () {
         status,
         response;
 
-    xhr.open('GET', url + this.uiid);
+    xhr.open('GET', url + this.gid);
 
     // Add events
     xhr.onreadystatechange = function () {

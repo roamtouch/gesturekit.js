@@ -36,10 +36,10 @@ gesturekit.on('GK_NAME', function (event) {
 ```
 
 ### Initialize gesturekit.
-Initializes the gesturekit library using the .init() method passing your `UIID` as parameter.
+Initializes the gesturekit library using the .init() method passing your `GID` as parameter.
 ```js
 gesturekit.init({
-    'uiid': 'xxxx-xxxx-xxxx'
+    'gid': 'xxxx-xxxx-xxxx'
 });
 ```
 
@@ -48,7 +48,7 @@ gesturekit.init({
 ### Table of contents
 
 - [Methods](#methods)
-    - [.init()](#gesturekitinitoptions--uiid)
+    - [.init()](#gesturekitinitoptions--gid)
     - [.enable()](#gesturekitenable)
     - [.disable()](#gesturekitdisable)
     - [.on()](#gesturekitonevent-listener-once)
@@ -72,17 +72,17 @@ gesturekit.init({
     - [gestureend](#gestureend)
 
 ### Methods
-#### gesturekit#init(options | uiid)
+#### gesturekit#init(options | gid)
 Initialize an instance of GestureKit. You could customize a GestureKit instance using the following options, and shown is their default value.
-- `options`: A given options to customize an instance or a string indicating a GestureKit UIID.
-    - `uiid`: A given string indicating a GestureKit UIID.
+- `options`: A given options to customize an instance or a string indicating a GestureKit `GID`.
+    - `gid`: A given string indicating a GestureKit `GID`.
     - `sensor`: An HTMLElement to use as recognizer sensor. Default: `document.documentElement`.
     - `enabled`: Enable or disable the gesture recognition. Default: `false`.
     - `threshold`: A given number of milliseconds to set a threshold to recognize a gesture. Default: `0`.
 
 ```js
 gesturekit.init({
-    'uiid': 'xxxx-xxxx-xxxx',
+    'gid': 'xxxx-xxxx-xxxx',
     'enabled': false
 });
 ```

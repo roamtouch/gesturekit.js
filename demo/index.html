@@ -5,7 +5,7 @@
         <title>GestureKit Demo</title>
         <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no,minimal-ui">
         <meta name="apple-mobile-web-app-capable" content="yes">
-        <link href="../../gesturekit-helper/helper.css" rel="stylesheet">
+        <link href="../helper/helper.css" rel="stylesheet">
         <style>
             body {
                 position: absolute;
@@ -19,31 +19,29 @@
     </head>
     <body>
         <script src="../dist/gesturekit.js"></script>
-        <script src="../../gesturekit-helper/helper.js"></script>
+        <script src="../helper/helper.js"></script>
+
         <script>
 
             window.onload = function () {
                 var viewport = document.querySelector('body');
 
                 gesturekit
-                    .on('GK_PLAY', function () {
+                    .on('GK_UP', function () {
                         viewport.style.backgroundColor = 'red';
                     })
-                    .on('GK_PAUSE', function () {
+                    .on('GK_DOWN', function () {
                         viewport.style.backgroundColor = 'blue';
                     })
-                    .on('GK_FORWARD', function () {
+                    .on('GK_LEFT', function () {
                         viewport.style.backgroundColor = 'green';
                     })
-                    .on('GK_BACKWARD', function () {
+                    .on('GK_RIGHT', function () {
                         viewport.style.backgroundColor = 'yellow';
-                    })
-                    .on('GK_STOP', function (eve) {
-                        viewport.style.backgroundColor = 'violet';
                     });
 
                 gesturekit.init({
-                    'uiid': '988786d4-56dd-45d6-a558-1245954d815c'
+                    'gid': 'dc6a09b0-250b-4823-b208-264ad4c0a50b'
                 });
 
                 gesturekit.helper();

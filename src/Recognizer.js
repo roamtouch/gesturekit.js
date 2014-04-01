@@ -12,12 +12,12 @@ var Pdollar = require('./pdollar').Pdollar,
 /**
  * Creates a new instance of Recognizer.
  * @constructor
- * @param {(Object | String)} [options] A given options to customize an instance or an string indicating UIID.
- * @param {String} [uiid] XXXXXX
+ * @param {(Object | String)} [options] A given options to customize an instance or an string indicating GID.
+ * @param {String} [gid] XXXXXX
  * @returns {recognizer} Returns a new instance of Recognizer.
  */
-function Recognizer(uiid) {
-    this.uiid = uiid;
+function Recognizer(gid) {
+    this.gid = gid;
 
     this.init();
 
@@ -28,7 +28,7 @@ function Recognizer(uiid) {
  * Initialize a new instance of Recognizer with given options.
  * @memberof! Recognizer.prototype
  * @function
- * @param {(Object | String)} options Configuration options or an string indicating UIID.
+ * @param {(Object | String)} options Configuration options or an string indicating GID.
  * @returns {recognizer} Returns a new instance of Recognizer.
  */
 Recognizer.prototype.init = function () {
@@ -59,7 +59,7 @@ Recognizer.prototype.loadGestures = function () {
         status,
         response;
 
-    xhr.open('GET', url + this.uiid);
+    xhr.open('GET', url + this.gid);
 
     // Add events
     xhr.onreadystatechange = function () {
