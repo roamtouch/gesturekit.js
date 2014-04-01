@@ -28,9 +28,9 @@ You should download the library and reference the JavaScript file using a `<scri
 ```
 
 ### Define your gesture listeners.
-Once added the library you can create your listeners with the same name you have defined the gesture with `GK_` prefix.
+Once added the library you can create your listeners with the same name you have defined the gesture (in uppercase).
 ```js
-gesturekit.on('GK_NAME', function (event) {
+gesturekit.on('NAME', function (event) {
     // Some code here!
 });
 ```
