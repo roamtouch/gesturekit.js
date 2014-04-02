@@ -17,7 +17,7 @@ function Point(x, y, id) {
 var M = window.Math,
     NumPoints = 32,
     Origin = new Point(0, 0, 0),
-    RECOGNITION_THRESHOLD = 1.8,
+    RECOGNITION_THRESHOLD = 1.5,
     NO_MATCH_NAME = 'No match.',
     NO_MATCH_SCORE = 0.0;
 
@@ -314,6 +314,7 @@ function PDollarRecognizer() {
             u2 = -1;
 
         this.pointClouds.forEach(function (pointCloud, i) {
+
             d = greedyCloudMatch(points, pointCloud);
             if (d < b1) {
                 b2 = b1;
@@ -342,7 +343,7 @@ function PDollarRecognizer() {
                 best = b1;
             }
 
-            if (best < RECOGNITION_THRESHOLD) {
+            if (best <= RECOGNITION_THRESHOLD) {
                 result.score = M.max((best - 2.0) / -2.0, 0.0);
             } else {
                 result.name = NO_MATCH_NAME;

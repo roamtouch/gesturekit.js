@@ -149,7 +149,7 @@ Recognizer.prototype.recognizeGesture = function () {
 
     result.metadata = this.metadata[result.name];
 
-    if (parseFloat(result.score) >= 0.1) {
+    if (parseFloat(result.score) !== 0.0) {
         gesturekit.emit(result.name, result);
         gesturekit.emit('recognize', result);
     } else {
