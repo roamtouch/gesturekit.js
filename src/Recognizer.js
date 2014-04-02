@@ -122,12 +122,34 @@ Recognizer.prototype.addGestures = function (data) {
  * @returns {recognizer} Returns a new instance of Recognizer.
  */
 Recognizer.prototype.setPoints = function (touches) {
+    var that = this;
+    this._pointers = touches.length;
+    [].forEach.call(touches, function (e, i) {
+        that.pointsCollection.push(new Point(e.pageX, e.pageY, i));
+    });
 
-    var that = this,
-        pointers = touches.length;
+    return this;
+};
 
-    [].forEach.call(touches, function (e) {
-        that.pointsCollection.push(new Point(e.pageX, e.pageY, pointers));
+/**
+ * Process pointsCollection.
+ * @memberof! Recognizer.prototype
+ * @function
+ * @returns {recognizer} Returns a new instance of Recognizer.
+ */
+Recognizer.prototype.processPoints = function () {
+
+    this.pointsCollection.sort(function (a, b) {
+        if (a.ID > b.ID) {
+          return 1;
+        }
+
+        if (a.ID < b.ID) {
+          return -1;
+        }
+
+        // a must be equal to b
+        return 0;
     });
 
     return this;
@@ -144,6 +166,8 @@ Recognizer.prototype.recognizeGesture = function () {
     if (this.pointsCollection.length < 5) {
         return;
     }
+
+    this.processPoints();
 
     var result = this.pdollar.recognize(this.pointsCollection);
 
