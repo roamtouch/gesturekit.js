@@ -9,6 +9,7 @@ var inherit = require('./helpers').inherit,
     Emitter = require('./Emitter'),
     touch = require('./touchEvents'),
     Recognizer = require('./Recognizer'),
+    Analytics = require('./Analytics'),
     requestAnimFrame = (function () {
         return window.requestAnimationFrame ||
             window.webkitRequestAnimationFrame ||
@@ -73,6 +74,8 @@ GestureKit.prototype.init = function init(options) {
         this._setPointerEvents();
 
         this._enabled = this._options.enabled;
+
+        new Analytics();
     }
 
     return this;

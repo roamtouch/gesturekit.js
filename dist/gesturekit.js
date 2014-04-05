@@ -13,6 +13,111 @@
  * @author Guille Paz <guille87paz@gmail.com>
  */
 
+var url = 'http://www.gesturekit.com/sdk/sendanalytics/';
+
+/**
+ * Creates a new instance of Analytics.
+ * @constructor
+ * @returns {analytics} Returns a new instance of Analytics.
+ */
+function Analytics() {
+    this.init();
+}
+
+/**
+ * Initialize a new instance of Analytics.
+ * @memberof! Analytics.prototype
+ * @function
+ * @returns {analytics} Returns a new instance of Analytics.
+ */
+Analytics.prototype.init = function () {
+    var that = this;
+
+    this.collection = {};
+
+    this.data = {
+        'json': {
+            'device_id': '',
+            'platform_id': 'pc',
+            'gid': gesturekit._options.gid,
+            'reports': []
+        },
+        'gid': gesturekit._options.gid,
+        'version': 1
+    };
+
+    gesturekit.on('recognize', function (gesture) {
+        that.collection[gesture.name] = that.collection[gesture.name] || [];
+        that.collection[gesture.name].push(gesture);
+        that.sendGestures();
+        that.collection.length = 0;
+    });
+
+    return this;
+};
+
+/**
+ *
+ * @memberof! Analytics.prototype
+ * @function
+ * @returns {analytics} Returns a new instance of Analytics.
+ */
+Analytics.prototype.sendGestures = function () {
+    var that = this,
+        gestures = [],
+        key,
+        xhr = new XMLHttpRequest(),
+        status,
+        queryString = [];
+
+    for (key in this.collection) {
+        gestures.push({
+            "count": this.collection[key].length,
+            "gesture_id": key
+        });
+    }
+
+    var data = {
+        'json': {
+            'device_id': '',
+            'platform_id': 'pc',
+            'gid': gesturekit._options.gid,
+            'reports': []
+        },
+        'gid': gesturekit._options.gid,
+        'version': 1
+    };
+
+    data.json.reports.push({
+        'gestures': gestures,
+        'date': new window.Date().getTime() / 1000 | 0
+    });
+
+    data.json = JSON.stringify(data.json);
+
+    for (key in data) {
+        queryString.push(key + '=' + data[key]);
+    }
+
+    queryString = queryString.join('&');
+
+    xhr.open('POST', url, true);
+    xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+    xhr.send(queryString);
+
+    return this;
+};
+
+
+// Expose Analytics
+module.exports = Analytics;
+},{}],2:[function(_dereq_,module,exports){
+'use strict';
+
+/**
+ * @author Guille Paz <guille87paz@gmail.com>
+ */
+
 /**
  * Event Emitter Class for the browser.
  * @constructor
@@ -154,7 +259,7 @@ Emitter.prototype.emit = function () {
 
 // Expose Emitter
 module.exports = Emitter;
-},{}],2:[function(_dereq_,module,exports){
+},{}],3:[function(_dereq_,module,exports){
 'use strict';
 
 /**
@@ -166,6 +271,7 @@ var inherit = _dereq_('./helpers').inherit,
     Emitter = _dereq_('./Emitter'),
     touch = _dereq_('./touchEvents'),
     Recognizer = _dereq_('./Recognizer'),
+    Analytics = _dereq_('./Analytics'),
     requestAnimFrame = (function () {
         return window.requestAnimationFrame ||
             window.webkitRequestAnimationFrame ||
@@ -230,6 +336,8 @@ GestureKit.prototype.init = function init(options) {
         this._setPointerEvents();
 
         this._enabled = this._options.enabled;
+
+        new Analytics();
     }
 
     return this;
@@ -354,7 +462,7 @@ GestureKit.prototype.disable = function () {
 
 // Expose GestureKit
 module.exports = GestureKit;
-},{"./Emitter":1,"./Recognizer":3,"./helpers":4,"./touchEvents":7}],3:[function(_dereq_,module,exports){
+},{"./Analytics":1,"./Emitter":2,"./Recognizer":4,"./helpers":5,"./touchEvents":8}],4:[function(_dereq_,module,exports){
 'use strict';
 
 /**
@@ -489,7 +597,7 @@ Recognizer.prototype.setPoints = function (touches) {
 };
 
 /**
- * Sort pointsCollection.
+ * Process pointsCollection.
  * @memberof! Recognizer.prototype
  * @function
  * @returns {recognizer} Returns a new instance of Recognizer.
@@ -546,7 +654,7 @@ Recognizer.prototype.recognizeGesture = function () {
 
 // Expose Recognizer
 module.exports = Recognizer;
-},{"./pdollar":6}],4:[function(_dereq_,module,exports){
+},{"./pdollar":7}],5:[function(_dereq_,module,exports){
 'use strict';
 
 /**
@@ -598,7 +706,7 @@ exports.inherit = function inherit(child, uber) {
 
     return uber.prototype;
 };
-},{}],5:[function(_dereq_,module,exports){
+},{}],6:[function(_dereq_,module,exports){
 'use strict';
 
 /**
@@ -622,7 +730,7 @@ gesturekit.version = '1.1.0';
 
 // Expose gesturekit
 module.exports = gesturekit;
-},{"./Gesturekit":2}],6:[function(_dereq_,module,exports){
+},{"./Gesturekit":3}],7:[function(_dereq_,module,exports){
 'use strict';
 
 /**
@@ -990,7 +1098,7 @@ module.exports.Pdollar = PDollarRecognizer;
 
 // Expose Point
 module.exports.Point = Point;
-},{}],7:[function(_dereq_,module,exports){
+},{}],8:[function(_dereq_,module,exports){
 'use strict';
 
 /**
@@ -1006,6 +1114,6 @@ var msPointerSupported = window.navigator.msPointerEnabled,
 
 // Expose GestureKit
 module.exports = touchEvents;
-},{}]},{},[5])
-(5)
+},{}]},{},[6])
+(6)
 });
