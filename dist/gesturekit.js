@@ -37,8 +37,8 @@ Analytics.prototype.init = function () {
 
     this.data = {
         'json': {
-            'device_id': '',
-            'platform_id': 'pc',
+            'device_id': window.navigator.userAgent,
+            'platform_id': '8',
             'gid': gesturekit._options.gid,
             'reports': []
         },
