@@ -27,21 +27,24 @@
                 var viewport = document.querySelector('body');
 
                 gesturekit
-                    .on('UP', function () {
+                    .on('PLAY', function () {
                         viewport.style.backgroundColor = 'red';
                     })
-                    .on('DOWN', function () {
+                    .on('PAUSE', function () {
                         viewport.style.backgroundColor = 'blue';
                     })
-                    .on('LEFT', function () {
+                    .on('STOP', function () {
+                        viewport.style.backgroundColor = 'orange';
+                    })
+                    .on('FORWARD', function () {
                         viewport.style.backgroundColor = 'green';
                     })
-                    .on('RIGHT', function () {
+                    .on('BACKWARD', function () {
                         viewport.style.backgroundColor = 'yellow';
                     });
 
                 gesturekit.init({
-                    'gid': 'dc6a09b0-250b-4823-b208-264ad4c0a50b'
+                    'gid': '988786d4-56dd-45d6-a558-1245954d815c'
                 });
 
                 gesturekit.helper();
