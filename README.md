@@ -5,11 +5,11 @@
 Advantages:
 
 - It's small and standalone.
-- Dependency-free.
 - Just 3 kb (min & gzip).
 - Multi-device support.
 - Easy-implementation.
 - Made it with love.
+- Support Leap Motion Controller.
 
 ## Compatibility
 - iOS
@@ -20,7 +20,15 @@ Advantages:
  - Chrome
  - Firefox
 
+## Dependency
+- LeapJS 0.5.0
+
 ##Usage
+### Add LeapJS library.
+```html
+<script src="//js.leapmotion.com/leap-0.5.0.min.js"></script>
+```
+
 ### Add gesturekit.js into your HTML file.
 You should download the library and reference the JavaScript file using a `<script>` tag somewhere on your HTML pages.
 ```html

@@ -143,6 +143,96 @@ GestureKit.prototype._setPointerEvents = function () {
 
     }, false);
 
+
+    //0 - not touching
+    //1 - touching
+    this.leap_touch_state = 0;
+    this.step = 2;
+    this.current_step = -1;
+    var controller = new Leap.Controller({
+        enableGestures: false
+    });
+    controller.loop(function (frame) {
+        var points = [];
+        // for scaling purposes
+        var w = window.screen.availWidth;
+        var h = window.screen.availHeight;
+        var iBox = frame.interactionBox;
+
+        // leapmotion gathers too much data for us
+        // so we filter out some of it
+        that.current_step = (that.current_step + 1) % that.step;
+        if (that.current_step == 0) {
+            for (var i = 0; i < frame.pointables.length; i++) {
+                var pointable = frame.pointables[i];
+
+                // is it touching the leap plane?
+                //pointable.touchZone =="touching")
+                if (pointable.tipPosition[2] < 0) {
+                    //scale the points to the ones of the screen
+                    //as well as use the stabilized position
+                    var pos = iBox.normalizePoint(pointable.stabilizedTipPosition, true);
+                    var x = w * pos[0];
+                    var y = h - h * pos[1];
+                    var lp = {
+                        pageX: x,
+                        pageY: y
+                    };
+                    points.push(lp);
+                }
+            }
+
+            //the previous state is touchless
+            if (that.leap_touch_state == 0) {
+                //touch start
+                if (points.length > 0) {
+                    //it is now touching
+                    that.leap_touch_state = 1;
+
+                    if (!that._enabled) {
+                        return;
+                    }
+                    that.recognizer.setPoints(points);
+                }
+            }
+            //the previous state is touching
+            else
+            if (that.leap_touch_state == 1) {
+                //touchend
+                if (points.length == 0) {
+                    //it is no longer touching
+                    that.leap_touch_state = 0;
+                    if (!motion && !that._enabled) {
+                        return;
+                    }
+
+                    motion = false;
+                    //that._wait = setTimeout(function () {
+                    that.recognizer.recognizeGesture();
+                    eve = {
+                        touches: points
+                    };
+                    that.emit('gestureend', eve);
+                    //}, that._threshold);
+                }
+                //touchmoving
+                else {
+                    //touch moving
+                    that.leap_touch_state = 1;
+
+                    //emit touch moving
+                    if (!motion && that._enabled) {
+                        eve = {
+                            touches: points
+                        };
+                        motion = true;
+                        requestAnimFrame(that._update);
+                    }
+                }
+            }
+        }
+    });
+
     return this;
 };
 
