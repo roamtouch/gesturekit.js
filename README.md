@@ -2,12 +2,12 @@
 
 A JavaScript library to recognize gestures on web browsers.
 
-  * It's small and standalone. 
-  * Dependency-free. 
-  * Just 3 kb (min & gzip). 
-  * Multi-device support. 
-  * Easy-implementation. 
-  * Made it with love. 
+  * It's small and standalone.
+  * Dependency-free.
+  * Just 3 kb (min & gzip).
+  * Multi-device support.
+  * Easy-implementation.
+  * Made it with love.
 
 * * *
 
@@ -15,13 +15,13 @@ A JavaScript library to recognize gestures on web browsers.
 
 ###
 
-  * iOS 
-    * iPhone/iPod iOS 6 
-    * iPad/iPhone iOS 7 
-  * Android 
-    * Default browser 
-    * Chrome 
-    * Firefox 
+  * iOS
+    * iPhone/iPod iOS 6
+    * iPad/iPhone iOS 7
+  * Android
+    * Default browser
+    * Chrome
+    * Firefox
 
 * * *
 
@@ -43,10 +43,10 @@ script > tag somewhere on your HTML pages.
 Once added the library you can create your listeners with the same name you
 have defined the gesture (in uppercase).
 
-```javascript   
+```javascript
     <script>
-    	gesturekit.on('NAME', function (event) {
-    	    // Some code here!
+        gesturekit.on('NAME', function (event) {
+            // Some code here!
         });
     </script>
 ```
@@ -58,11 +58,11 @@ have defined the gesture (in uppercase).
 Initializes the gesturekit library using the .init() method passing your `GID`
  as parameter.
 
-```javascript      
+```javascript
     <script>
-	    gesturekit.init({
-	    	'gid': 'xxxx-xxxx-xxxx'
-		});
+        gesturekit.init({
+            'gid': 'xxxx-xxxx-xxxx'
+        });
     </script>
 ```
 
@@ -97,7 +97,7 @@ Initializes the gesturekit library using the .init() method passing your `GID`
     - [gesturestart](#gesturestart)
     - [gesturemotion](#gesturemotion)
     - [gestureend](#gestureend)
-    
+
 ***
 
 ### Methods
@@ -319,30 +319,30 @@ gesturekit.on('gestureend', function (event) {
 
 
   1. Install [Git](http://git-scm.com/) and [NodeJS](http://nodejs.org/).
-  
+
   2. Open your terminal and clone `roamtouch/GestureKit` by running:
     ```
     $ git clone git@github.com:roamtouch/GestureKit.git
     ```
-    
+
   3. Now go to the project's folder:
     ```
     $ cd GestureKit
     ```
-    
+
   4. Install its dependencies:
     ```
     $ npm install
     ```
-    
+
   5. Install `grunt-cli`:
     ```
     $ npm install grunt-cli -g
     ```
 
   6. Develop!
-  
-***  
+
+***
 
 ## Grunt tasks
 - `grunt dev`: Builds a development version.
@@ -367,5 +367,4 @@ gesturekit.on('gestureend', function (event) {
 Licensed under Apache v2 License.
 
 Copyright (c) 2014 [RoamTouch](http://github.com/RoamTouch).
-
 
