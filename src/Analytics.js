@@ -63,8 +63,9 @@ Analytics.prototype.sendGestures = function () {
 
     for (key in this.collection) {
         gestures.push({
-            "count": this.collection[key].length,
-            "gesture_id": key
+            'gesture_id': key,
+            'score': this.collection[key][0].score,
+            'count': this.collection[key].length
         });
     }
 
