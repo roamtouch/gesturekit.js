@@ -1,5 +1,5 @@
 /*!
- * gesturekit.js v1.1.1
+ * gesturekit.js v1.1.2
  * http://gesturekit.com/
  *
  * Copyright (c) 2014, RoamTouch
@@ -68,13 +68,15 @@ Analytics.prototype.sendGestures = function () {
         key,
         xhr = new XMLHttpRequest(),
         status,
-        queryString = [];
+        queryString = [],
+        gesture;
 
     for (key in this.collection) {
+        gesture = this.collection[key];
         gestures.push({
             'gesture_id': key,
-            'score': this.collection[key][0].score,
-            'count': this.collection[key].length
+            'score': (gesture.length > 0) ? gesture[0].score : 0,
+            'count': gesture.length
         });
     }
 
@@ -727,7 +729,7 @@ gesturekit = new Gesturekit();
 /**
  * gesturekit version.
  */
-gesturekit.version = '1.1.1';
+gesturekit.version = '1.1.2';
 
 // Expose gesturekit
 module.exports = gesturekit;
