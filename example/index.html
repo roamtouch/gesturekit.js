@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>Hello World!</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimal-ui">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <link href="gesturekit.helper.min.css" rel="stylesheet">
+        <style>
+            body {
+                margin: 0;
+                font-family: "Helvetica Neue", Helvetica, Arial, serif;
+                background-color: #FFF;
+                text-align: center;
+            }
+
+            .btn {
+                display: inline-block;
+                padding: 10px 16px;
+                background-color: #2980b9;
+                line-height: 200px;
+                text-align: center;
+                font-size: 2em;
+                line-height: 1em;
+                cursor: pointer;
+                border: none;
+                color: #FFF;
+                border-radius: 5px;
+                font-size: 18px;
+                margin: 40px auto;
+            }
+
+            #sensor {
+                background-color:rgba(0,0,0,.2);
+                border:1px solid #CCC;
+                border-radius:4px;
+                height:380px;
+                overflow:auto;color:#FFF;
+                text-shadow:0 -1px #666;
+                margin: 20px auto
+            }
+        </style>
+    </head>
+    <body>
+        <button id="hello" class="btn">Hello</button>
+        <div id="sensor"></div>
+        <script src="../dist/gesturekit.min.js"></script>
+        <script src="gesturekit.helper.min.js"></script>
+        <script>
+            function sayHello(msg) {
+                alert(msg || 'Hello!');
+            }
+
+            document.getElementById('hello').addEventListener('click', function() {
+                sayHello();
+            });
+
+            gesturekit.init({
+                'gid': '38381630-b759-4c55-91c1-985306dbe587',
+                'sensor': document.getElementById('sensor')
+            });
+
+            gesturekit.on('HELLO', function() {
+                sayHello('Hello GestureKit!');
+            });
+
+            var helper = gesturekit.helper();
+        </script>
+    </body>
+</html>
