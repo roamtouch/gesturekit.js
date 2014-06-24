@@ -1,5 +1,5 @@
 /*!
- * gesturekit.js v1.1.2
+ * gesturekit.js v1.1.3
  * http://gesturekit.com/
  *
  * Copyright (c) 2014, RoamTouch
@@ -13,7 +13,7 @@
  * @author Guille Paz <guille87paz@gmail.com>
  */
 
-var url = 'http://www.gesturekit.com/sdk/sendanalytics/';
+var url = 'http://www.gesturekit.com/dashboard/sdk/sendanalytics/';
 
 /**
  * Creates a new instance of Analytics.
@@ -729,7 +729,7 @@ gesturekit = new Gesturekit();
 /**
  * gesturekit version.
  */
-gesturekit.version = '1.1.2';
+gesturekit.version = '1.1.3';
 
 // Expose gesturekit
 module.exports = gesturekit;
