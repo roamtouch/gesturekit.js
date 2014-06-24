@@ -4,7 +4,7 @@
  * @author Guille Paz <guille87paz@gmail.com>
  */
 
-var url = 'http://www.gesturekit.com/sdk/sendanalytics/';
+var url = 'http://www.gesturekit.com/dashboard/sdk/sendanalytics/';
 
 /**
  * Creates a new instance of Analytics.
