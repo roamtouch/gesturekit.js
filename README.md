@@ -1,3 +1,5 @@
+<img src="http://www.gesturekit.com/wp-content/uploads/2014/05/colash_largo.png" alt="GestureKit Technology">
+
 # [gesturekit.js v1.1.0](http://gesturekit.com) [![Build Status](https://secure.travis-ci.org/RoamTouch/gesturekit.js.png)](http://travis-ci.org/RoamTouch/gesturekit.js) [![devDependency Status](https://david-dm.org/RoamTouch/gesturekit.js/dev-status.png)](https://david-dm.org/RoamTouch/gesturekit.js#info=devDependencies)
 
 > A JavaScript library to recognize gestures on web browsers.
@@ -300,11 +302,17 @@ gesturekit.on('gestureend', function (event) {
 - Twitter: [@pazguille](http://twitter.com/pazguille)
 - Web: [http://pazguille.me](http://pazguille.me)
 
-## Credits
+## Credits
 
-<img src="http://www.gesturekit.com/assets/img/roamtouch.png" width="200" alt="RoamTouch logo">
+<img src="http://www.roamtouch.com/wp-content/uploads/2014/06/logo.png" width="200" alt="RoamTouch logo">
 
-## License
+[RoamTouch](http://roamtouch.com)
+
+<img src="http://www.gesturekit.com/wp-content/uploads/2014/05/logogkblue.png" width="200" alt="RoamTouch logo">
+
+[GestureKit](http://www.gesturekit.com)
+
+## License
 Licensed under Apache v2 License.
 
-Copyright (c) 2014 [RoamTouch](http://github.com/RoamTouch).
+Copyright (c) 2014 [RoamTouch](http://github.com/RoamTouch). 
