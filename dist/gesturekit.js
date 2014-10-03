@@ -1,5 +1,5 @@
 /*!
- * gesturekit.js v1.1.3
+ * gesturekit.js v1.1.4
  * http://gesturekit.com/
  *
  * Copyright (c) 2014, RoamTouch
@@ -729,7 +729,7 @@ gesturekit = new Gesturekit();
 /**
  * gesturekit version.
  */
-gesturekit.version = '1.1.3';
+gesturekit.version = '1.1.4';
 
 // Expose gesturekit
 module.exports = gesturekit;
@@ -1036,7 +1036,8 @@ function PDollarRecognizer() {
         points = scale(points);
         points = translateTo(points, Origin);
 
-        var d,
+        var that = this,
+            d,
             result = {
                 'name': NO_MATCH_NAME,
                 'score': NO_MATCH_SCORE
@@ -1053,12 +1054,18 @@ function PDollarRecognizer() {
 
             d = greedyCloudMatch(points, pointCloud);
             if (d < b1) {
-                b2 = b1;
-                u2 = u1;
+
+                if (u1 === -1 || pointCloud.name != that.pointClouds[u1].name) {
+                  b2 = b1;
+                  u2 = u1;
+                }
+
+                // b2 = b1;
+                // u2 = u1;
 
                 b1 = d; // best (least) distance
                 u1 = i; // point-cloud
-            } else if (d < b2) {
+            } else if (d < b2 && pointCloud.name != that.pointClouds[u1].name) {
                 b2 = d;
                 u2 = i;
             }
