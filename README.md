@@ -349,7 +349,7 @@ gesturekit.on('gestureend', function (event) {
 ## Grunt tasks
 - `grunt dev`: Builds a development version.
 - `grunt test`: Runs Jasmine tests.
-- `grunt dist`: Creates a distrubution version of GestureKit. You should find two files: `.dist/gesturekit.js` and `.dist/gesturekit.min.js`.
+- `grunt dist`: Creates a distribution version of GestureKit. You should find two files: `.dist/gesturekit.js` and `.dist/gesturekit.min.js`.
 
 ***
 
